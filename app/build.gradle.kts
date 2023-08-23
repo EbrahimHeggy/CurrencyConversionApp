@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "dev.currency_conversion_app"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "dev.currency_conversion_app"
         minSdk = 27
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
