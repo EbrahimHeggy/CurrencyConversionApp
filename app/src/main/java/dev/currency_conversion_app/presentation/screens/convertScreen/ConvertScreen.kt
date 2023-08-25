@@ -51,6 +51,10 @@ import dev.currency_conversion_app.ui.theme.FiledBackground
 @Composable
 fun ConvertScreen() {
 
+    var isSheetEnabled by remember {
+        mutableStateOf(false)
+    }
+
             ConvertItem()
 
             Button(
@@ -98,7 +102,7 @@ fun ConvertScreen() {
                 )
 
                 Button(
-                    onClick = { /* Handle button click */ },
+                    onClick = { isSheetEnabled=true },
                     colors = ButtonDefaults.buttonColors(Color.White),
                     shape = RoundedCornerShape(20.dp),
                     modifier = Modifier.border(
@@ -128,6 +132,14 @@ fun ConvertScreen() {
                     )
                 }
             }
+    // Show the bottom sheet when isSheetEnabled is true
+    if (isSheetEnabled) {
+        FavoriteBottomSheet(
+            isSheetEnabled = isSheetEnabled,
+            onDismissRequest = { isSheetEnabled = false }
+        )
+    }
+
 
             Column (modifier = Modifier
                 .fillMaxWidth(),
