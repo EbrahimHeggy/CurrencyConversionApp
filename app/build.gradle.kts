@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "dev.currency_conversion_app"
-    compileSdk = 34
+    compileSdk = 33
 
     defaultConfig {
         applicationId = "dev.currency_conversion_app"
         minSdk = 27
-        targetSdk = 34
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
@@ -78,18 +78,27 @@ dependencies {
     implementation("androidx.room:room-runtime:2.5.2")
     implementation("androidx.room:room-ktx:2.5.2")
     kapt("androidx.room:room-compiler:2.5.2")
-    implementation("androidx.navigation:navigation-compose:2.7.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.0")
-
-    // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
-    // TODO: Add the dependencies for Firebase products you want to use
-    // When using the BoM, don't specify versions in Firebase dependencies
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    // icons
-    implementation ("androidx.compose.material:material-icons-extended:1.5.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.0")
-
     implementation ("io.coil-kt:coil-compose:1.4.0")
+
+    // Compose Navigation
+    implementation ("androidx.navigation:navigation-compose:2.5.0-rc01")
+
+    // Dagger - Hilt
+    implementation ("com.google.dagger:hilt-android:2.44")
+    kapt ("com.google.dagger:hilt-android-compiler:2.44")
+    kapt ("androidx.hilt:hilt-compiler:1.0.0")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0-alpha01")
+
+    // Coil
+    implementation ("io.coil-kt:coil-compose:2.4.0")
+
+    // Kotlin-Co components
+    implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.20")
+    api ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+    api ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+
+    // Lifecycle Compose
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+
 
 }
