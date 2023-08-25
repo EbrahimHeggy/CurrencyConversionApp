@@ -1,4 +1,4 @@
-package dev.currency_conversion_app.presentation.screens.convert
+package dev.currency_conversion_app.presentation.screens.homeScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,6 +34,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.currency_conversion_app.R
+import dev.currency_conversion_app.presentation.screens.compareScreen.CompareScreen
+import dev.currency_conversion_app.presentation.screens.convertScreen.ConvertScreen
 
 @Composable
 fun Home() {
@@ -160,9 +162,9 @@ fun Home() {
             }
 
             if (isConvertScreen) {
-                CompareScreen3()
+                ConvertScreen()
             } else {
-                CompareScreen2()
+                CompareScreen()
             }
 
         }
