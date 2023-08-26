@@ -1,4 +1,4 @@
-package com.example.concurrency
+package com.example.concurrency.presentation.favorite_screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,6 +8,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
+import com.example.concurrency.FavoriteItem
 
 
 @SuppressLint("SuspiciousIndentation")

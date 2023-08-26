@@ -45,7 +45,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.concurrency.FavoriteBottomSheet
+import com.example.concurrency.presentation.favorite_screen.FavoriteBottomSheet
 import com.example.concurrency.R
 import com.example.concurrency.ui.theme.ButtonColors
 import com.example.concurrency.ui.theme.FiledBackground
