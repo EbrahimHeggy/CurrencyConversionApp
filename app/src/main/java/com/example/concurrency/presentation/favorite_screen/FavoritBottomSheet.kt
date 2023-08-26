@@ -1,5 +1,6 @@
 package com.example.concurrency
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -9,19 +10,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 
 
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoriteBottomSheet() {
+fun FavoriteBottomSheet(onSheetDismissed: () -> Unit) {
 
     val favoriteSheetState = rememberModalBottomSheetState()
-    var isSheetEnabled by remember {
-        mutableStateOf(false)
-    }
 
-    if (isSheetEnabled){
+
         ModalBottomSheet(
             sheetState = favoriteSheetState,
-            onDismissRequest = { isSheetEnabled = false }
+            onDismissRequest = { onSheetDismissed() }
         ) {
             LazyColumn() {
                 items(10) {
@@ -30,6 +29,6 @@ fun FavoriteBottomSheet() {
             }
 
         }
-    }
+
 
 }
