@@ -1,8 +1,7 @@
 package com.example.concurrency.di
 
-import com.example.concurrency.data.remote.CurrencyApi
+import com.example.concurrency.data.remote.api.CurrencyApi
 import com.example.concurrency.utils.Constant.BASE_URL
-import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.concurrency.R
@@ -60,16 +62,16 @@ fun HeaderScreen(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = "App Name",
             modifier = Modifier
-                .padding(top = 16.dp)
-                .width(144.dp)
-                .height(32.dp)
+                .padding(16.dp)
+                .width(150.dp)
+                .height(40.dp)
                 .align(Alignment.TopStart)
         )
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 30.dp)
+                .padding(top = 40.dp)
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -91,13 +93,11 @@ fun HeaderScreen(
                 )
             )
         }
-
         Row(
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .clip(shape = RoundedCornerShape(22.dp))
+                .clip(shape = RoundedCornerShape(30.dp))
                 .background(color = Color(0xfff8f8f8))
-                .padding(start = 20.dp, end = 20.dp, top = 5.dp, bottom = 5.dp)
                 .align(Alignment.BottomCenter)
         )
         {
@@ -133,7 +133,7 @@ fun HeaderScreen(
                     ButtonDefaults.buttonColors(containerColor = FiledBackground),
                 contentPadding = PaddingValues(all = 9.dp),
                 modifier = Modifier
-                    .requiredWidth(width = 108.dp)
+                    .requiredWidth(width = 136.dp)
                     .requiredHeight(height = 46.dp)
             ) {
                 Text(
