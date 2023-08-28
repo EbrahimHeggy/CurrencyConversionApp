@@ -1,7 +1,6 @@
 package com.example.concurrency.presentation.convert_screen
 
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -70,9 +69,9 @@ fun ConvertScreen(
         onClick = {
             onEvent(
                 ConvertEvent.GetConvertedCurrency(
-                    state.amount.toDouble(),
                     state.base,
-                    state.target
+                    state.target,
+                    state.amount.toDouble(),
                 )
             )
         },
@@ -391,7 +390,7 @@ fun ConvertItem(
                             DropdownMenuItem(
                                 text = { Text(text = currency.code) },
                                 onClick = {
-                                    onEvent(ConvertEvent.SetTarget(currency.code)) // Update the selected currency when clicked
+                                    onEvent(ConvertEvent.SetBase(currency.code)) // Update the selected currency when clicked
                                     expandedTo = false
                                 },
                                 leadingIcon = {

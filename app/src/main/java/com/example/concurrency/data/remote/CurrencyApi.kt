@@ -10,17 +10,17 @@ import retrofit2.http.Query
 interface CurrencyApi {
 
 
-    @GET("v1/currency/conversion?")
+    @GET("currency/conversion")
     suspend fun getConversionCurrency(
-        @Query("amount") amount: Double,
         @Query("from") base: String,
-        @Query("to1") target: String
-    ): ConvertResponse
+        @Query("to1") target: String,
+        @Query("amount") amount: Double,
+    ): Response<ConvertResponse>
 
-    @GET("v1/currency")
-    suspend fun getAllCurrencies():Currencies
+    @GET("currency")
+    suspend fun getAllCurrencies(): Response<Currencies>
 
-    @GET("v1/currency/conversion?")
+    @GET("currency/conversion")
     suspend fun getComparedCurrency(
         @Query("amount") amount: Double,
         @Query("from") base: String,

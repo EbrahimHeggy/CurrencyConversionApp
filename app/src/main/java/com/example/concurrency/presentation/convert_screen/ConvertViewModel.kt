@@ -3,21 +3,27 @@ package com.example.concurrency.presentation.convert_screen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.concurrency.data.remote.model.Currencies
+import com.example.concurrency.data.repository.CurrencyRepository
 import com.example.concurrency.domain.usecase.AllUseCases
 import com.example.concurrency.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class ConvertViewModel @Inject constructor(
-    private val useCases: AllUseCases
+    private val useCases: AllUseCases,
+    private val repository: CurrencyRepository
 ) : ViewModel() {
 
+    var currency: Currencies? = null
 
     private val _currencyState = MutableStateFlow(CurrencyState())
     val currencyState = _currencyState.asStateFlow()
@@ -25,6 +31,7 @@ class ConvertViewModel @Inject constructor(
     init {
         getAllCurrencies()
     }
+
 
 
     fun onEvent(event: ConvertEvent) {
@@ -40,7 +47,7 @@ class ConvertViewModel @Inject constructor(
             }
 
             is ConvertEvent.GetConvertedCurrency -> {
-                getConvertedCurrency(event.amount, event.base, event.target)
+                getConvertedCurrency(event.base, event.target,event.amount)
             }
         }
     }
@@ -49,21 +56,23 @@ class ConvertViewModel @Inject constructor(
     private fun getAllCurrencies() {
         viewModelScope.launch {
             useCases.getAllCurrenciesUseCase().onEach { result ->
-                when(result) {
-                    is Resource.Error -> {
-                        _currencyState.update { state ->
-                            state.copy(error = result.message ?: "")
+                withContext(Dispatchers.Main){
+                    when(result) {
+                        is Resource.Error -> {
+                            _currencyState.update { state ->
+                                state.copy(error = result.message ?: "")
+                            }
+                            Log.e("result Currency", result.data?.data.toString())
                         }
-                        Log.e("result Currency", result.data?.data.toString())
-                    }
-                    is Resource.Loading -> {
-                        _currencyState.update { it.copy(isLoading = true) }
-                        Log.e("result Currency", result.data?.data.toString())
+                        is Resource.Loading -> {
+                            _currencyState.update { it.copy(isLoading = true) }
+                            Log.e("result Currency", result.data?.data.toString())
 
-                    }
-                    is Resource.Success -> {
-                        _currencyState.update { it.copy(currencies = result.data) }
-                        Log.e("result Currency", result.data?.data.toString())
+                        }
+                        is Resource.Success -> {
+                            _currencyState.update { it.copy(currencies = result.data) }
+                            Log.e("result Currency", result.data?.data.toString())
+                        }
                     }
                 }
             }
@@ -71,12 +80,12 @@ class ConvertViewModel @Inject constructor(
     }
 
     private fun getConvertedCurrency(
-        amount: Double,
         base: String,
-        target: String
+        target: String,
+        amount: Double,
     ) {
         viewModelScope.launch {
-            useCases.getConvertCurrencyUseCase(amount, base, target).onEach { result ->
+            useCases.getConvertCurrencyUseCase(base, target,amount).onEach { result ->
                 when(result) {
                     is Resource.Error -> {
                         _currencyState.update { it.copy(error = result.message ?: "") }

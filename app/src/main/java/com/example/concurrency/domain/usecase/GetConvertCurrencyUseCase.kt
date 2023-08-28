@@ -13,7 +13,7 @@ class GetConvertCurrencyUseCase @Inject constructor(
 ) {
 
 
-    suspend operator fun invoke(amount: Double,base: String, target: String)
+    suspend operator fun invoke(base: String, target: String,amount: Double)
             : Flow<Resource<ConvertResponse>> = flow {
 
         try {
@@ -22,8 +22,8 @@ class GetConvertCurrencyUseCase @Inject constructor(
             delay(2000L)
 
             // success state
-            val result = currencyRepository.getConversionCurrency(amount,base, target)
-            emit(Resource.Success(result))
+            val result = currencyRepository.getConversionCurrency(base, target, amount)
+            emit(Resource.Success(result.body()))
 
         } catch (e: Exception) {
             // error state

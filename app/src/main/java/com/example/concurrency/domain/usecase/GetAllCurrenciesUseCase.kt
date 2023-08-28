@@ -1,5 +1,6 @@
 package com.example.concurrency.domain.usecase
 
+import android.util.Log
 import com.example.concurrency.data.remote.model.Currencies
 import com.example.concurrency.data.repository.CurrencyRepository
 import com.example.concurrency.utils.Resource
@@ -18,15 +19,19 @@ class GetAllCurrenciesUseCase @Inject constructor(
 
             //loading state
             emit(Resource.Loading())
-            delay(2000L)
 
             // success state
             val result = currencyRepository.getAllCurrencies()
-            emit(Resource.Success(result))
+           Log.e("success currencies", result.toString())
+            emit(Resource.Success(result.body()))
+
 
         } catch (e: Exception) {
             // error state
+            Log.e("success currencies", e.message.toString())
+
             emit(Resource.Error(e.message))
+
 
         }
     }
