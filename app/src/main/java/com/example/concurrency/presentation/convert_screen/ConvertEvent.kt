@@ -6,7 +6,19 @@ sealed interface ConvertEvent {
         ConvertEvent
 
     data class SetBaseAmount(val amount: String) : ConvertEvent
-    data class SetBase(val base: String) : ConvertEvent
-    data class SetTarget(val target: String) : ConvertEvent
+    data class SetBase(val base: Base) : ConvertEvent
+    data class SetTarget(val target: Target) : ConvertEvent
+
+    data class SetImage(val url: String): ConvertEvent
 
 }
+
+data class Base(
+    val base: String,
+    val imageUrl: String
+)
+
+data class Target(
+    val target: String,
+    val imageUrl: String
+)

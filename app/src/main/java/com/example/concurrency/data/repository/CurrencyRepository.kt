@@ -6,7 +6,6 @@ import com.example.concurrency.data.remote.model.ConvertResponse
 import com.example.concurrency.data.remote.model.Currencies
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.Response
 import javax.inject.Inject
 
 class CurrencyRepository @Inject constructor(
@@ -17,7 +16,7 @@ class CurrencyRepository @Inject constructor(
         target: String,
         amount: Double,
 
-        ): Response<ConvertResponse> {
+        ): ConvertResponse {
         return withContext(Dispatchers.IO) {
             api.getConversionCurrency(
                base, target,amount
@@ -25,7 +24,7 @@ class CurrencyRepository @Inject constructor(
         }
     }
 
-    suspend fun getAllCurrencies(): Response<Currencies >{
+    suspend fun getAllCurrencies(): Currencies{
         return withContext(Dispatchers.IO){
             api.getAllCurrencies()
         }

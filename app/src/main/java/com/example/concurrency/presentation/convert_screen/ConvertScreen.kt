@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,7 +32,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,8 +59,13 @@ fun ConvertScreen(
 ) {
 
 
+
     var isSheetEnabled by remember {
         mutableStateOf(false)
+    }
+
+    if (state.isLoading){
+        CircularProgressIndicator()
     }
 
     ConvertItem(state, onEvent)
@@ -69,8 +74,8 @@ fun ConvertScreen(
         onClick = {
             onEvent(
                 ConvertEvent.GetConvertedCurrency(
-                    state.base,
-                    state.target,
+                    state.base.base,
+                    state.target.target,
                     state.amount.toDouble(),
                 )
             )
@@ -96,7 +101,7 @@ fun ConvertScreen(
 
 
     Divider(
-        color = Color.LightGray, modifier = Modifier.padding(start=16.dp,end=16.dp)
+        color = Color.LightGray, modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     )
 
     Spacer(modifier = Modifier.height(10.dp))
@@ -230,6 +235,7 @@ fun ConvertItem(
 ) {
 
 
+
     var expandedFrom by remember {
         mutableStateOf(false)
     }
@@ -289,8 +295,17 @@ fun ConvertItem(
             ) {
 
                 OutlinedTextField(
-                    value = state.target, // Use the selected currency as the value
-                    onValueChange = { onEvent(ConvertEvent.SetTarget(it)) },
+                    value = state.target.target, // Use the selected currency as the value
+                    onValueChange = {
+                        onEvent(
+                            ConvertEvent.SetTarget(
+                                Target(
+                                    target = it,
+                                    imageUrl = ""
+                                )
+                            )
+                        )
+                    },
                     readOnly = true,
                     shape = CircleShape,
                     enabled = false,
@@ -301,14 +316,11 @@ fun ConvertItem(
                         )
                     },
                     leadingIcon = {
-                        Image(
-                            painter = painterResource(id = R.drawable.egypt_flag),
-                            contentDescription = ""
-                        )
+                        AsyncImage(model = state.target.imageUrl, contentDescription = "")
                     },
                     modifier = Modifier
                         .background(FiledBackground)
-                        .menuAnchor()
+                        .menuAnchor(),
 
                 )
 
@@ -321,7 +333,14 @@ fun ConvertItem(
                         DropdownMenuItem(
                             text = { Text(text = currency.code) },
                             onClick = {
-                                onEvent(ConvertEvent.SetTarget(currency.code)) // Update the selected currency when clicked
+                                onEvent(
+                                    ConvertEvent.SetTarget(
+                                        Target(
+                                            target = currency.code,
+                                            imageUrl = currency.imageUrl
+                                        )
+                                    )
+                                ) // Update the selected currency when clicked
                                 expandedTo = false
                             },
                             leadingIcon = {
@@ -359,8 +378,17 @@ fun ConvertItem(
             ) {
 
                 OutlinedTextField(
-                    value = state.base,
-                    onValueChange = { onEvent(ConvertEvent.SetBase(it)) },
+                    value = state.base.base,
+                    onValueChange = {
+                        onEvent(
+                            ConvertEvent.SetBase(
+                                Base(
+                                    base = it,
+                                    imageUrl = ""
+                                )
+                            )
+                        )
+                    },
                     readOnly = true,
                     shape = CircleShape,
                     maxLines = 1,
@@ -370,10 +398,8 @@ fun ConvertItem(
                         )
                     },
                     leadingIcon = {
-                        Image(
-                            painter = painterResource(id = R.drawable.egypt_flag),
-                            contentDescription = ""
-                        )
+                        AsyncImage(model = state.base.imageUrl, contentDescription = "")
+
                     },
                     modifier = Modifier
                         .background(FiledBackground)
@@ -391,8 +417,15 @@ fun ConvertItem(
                             DropdownMenuItem(
                                 text = { Text(text = currency.code) },
                                 onClick = {
-                                    onEvent(ConvertEvent.SetBase(currency.code)) // Update the selected currency when clicked
-                                    expandedTo = false
+                                    onEvent(
+                                        ConvertEvent.SetBase(
+                                            Base(
+                                                base = currency.code,
+                                                imageUrl = currency.imageUrl
+                                            )
+                                        )
+                                    ) // Update the selected currency when clicked
+                                    expandedFrom = false
                                 },
                                 leadingIcon = {
                                     AsyncImage(model = currency.imageUrl, contentDescription = "")

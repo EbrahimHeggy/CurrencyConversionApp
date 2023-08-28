@@ -13,7 +13,7 @@ class GetAllCurrenciesUseCase @Inject constructor(
     private val currencyRepository: CurrencyRepository
 ) {
 
-    suspend operator fun invoke(): Flow<Resource<Currencies>> = flow {
+     operator fun invoke(): Flow<Resource<Currencies>> = flow {
 
         try {
 
@@ -23,14 +23,14 @@ class GetAllCurrenciesUseCase @Inject constructor(
             // success state
             val result = currencyRepository.getAllCurrencies()
            Log.e("success currencies", result.toString())
-            emit(Resource.Success(result.body()))
+            emit(Resource.Success(result))
 
 
         } catch (e: Exception) {
             // error state
             Log.e("success currencies", e.message.toString())
 
-            emit(Resource.Error(e.message))
+            emit(Resource.Error(e.message.toString()))
 
 
         }
