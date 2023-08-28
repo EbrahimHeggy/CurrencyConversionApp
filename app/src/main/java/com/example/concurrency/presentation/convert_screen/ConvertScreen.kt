@@ -1,6 +1,7 @@
 package com.example.concurrency.presentation.convert_screen
 
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -31,6 +32,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,27 +44,38 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.concurrency.presentation.favorite_screen.FavoriteBottomSheet
 import com.example.concurrency.R
 import com.example.concurrency.ui.theme.ButtonColors
 import com.example.concurrency.ui.theme.FiledBackground
 
 
-@Preview
 @Composable
-fun ConvertScreen() {
+fun ConvertScreen(
+    state: CurrencyState,
+    onEvent: (ConvertEvent) -> Unit
+) {
+
 
     var isSheetEnabled by remember {
         mutableStateOf(false)
     }
 
-    ConvertItem()
+    ConvertItem(state, onEvent)
 
     Button(
-        onClick = { },
+        onClick = {
+            onEvent(
+                ConvertEvent.GetConvertedCurrency(
+                    state.amount.toDouble(),
+                    state.base,
+                    state.target
+                )
+            )
+        },
         shape = CircleShape,
         colors = ButtonDefaults.buttonColors(ButtonColors),
         modifier = Modifier
@@ -98,7 +111,7 @@ fun ConvertScreen() {
     ) {
         Text(
             text = "live exchange rates",
-            modifier= Modifier,
+            modifier = Modifier,
             style = TextStyle(
                 fontSize = 16.sp,
                 fontWeight = FontWeight(600),
@@ -107,7 +120,7 @@ fun ConvertScreen() {
         )
 
         Button(
-            onClick = { isSheetEnabled=true },
+            onClick = { isSheetEnabled = true },
             colors = ButtonDefaults.buttonColors(Color.White),
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier.border(
@@ -145,11 +158,12 @@ fun ConvertScreen() {
     }
 
 
-    Column (modifier = Modifier
-        .fillMaxWidth()
-        .padding(16.dp),
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
         horizontalAlignment = Alignment.Start
-    ){
+    ) {
         // Text "My Portfolio"
         Box {
             Text(
@@ -211,13 +225,10 @@ fun ConvertScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConvertItem() {
-
-    var amountFrom by remember { mutableStateOf("") }
-    var amountTo by remember { mutableStateOf("") }
-
-    var selectedCurrencyFrom by remember { mutableStateOf("EGP") } // Initial value
-    var selectedCurrencyTo by remember { mutableStateOf("EGP") } // Initial value
+fun ConvertItem(
+    state: CurrencyState,
+    onEvent: (ConvertEvent) -> Unit
+) {
 
 
     var expandedFrom by remember {
@@ -251,8 +262,8 @@ fun ConvertItem() {
             )
 
             OutlinedTextField(
-                value = amountFrom,
-                onValueChange = {amountFrom=it},
+                value = state.amount,
+                onValueChange = { onEvent(ConvertEvent.SetBaseAmount(it)) },
                 shape = CircleShape,
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -279,8 +290,8 @@ fun ConvertItem() {
             ) {
 
                 OutlinedTextField(
-                    value = selectedCurrencyTo, // Use the selected currency as the value
-                    onValueChange = {},
+                    value = state.target, // Use the selected currency as the value
+                    onValueChange = { onEvent(ConvertEvent.SetTarget(it)) },
                     readOnly = true,
                     shape = CircleShape,
                     maxLines = 1,
@@ -306,32 +317,21 @@ fun ConvertItem() {
                     onDismissRequest = { expandedTo = false }
                 ) {
 
-                    DropdownMenuItem(
-                        text = { Text(text = "USD") },
-                        onClick = {
-                            selectedCurrencyTo = "USD" // Update the selected currency when clicked
-                            expandedTo = false
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text(text = "EGP") },
-                        onClick = {
-                            selectedCurrencyTo = "EGP" // Update the selected currency when clicked
-                            expandedTo = false
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text(text = "UKA") },
-                        onClick = {
-                            selectedCurrencyTo = "UKA" // Update the selected currency when clicked
-                            expandedTo = false
-                        }
-                    )
-
+                    state.currencies?.data?.forEach { currency ->
+                        DropdownMenuItem(
+                            text = { Text(text = currency.code) },
+                            onClick = {
+                                onEvent(ConvertEvent.SetTarget(currency.code)) // Update the selected currency when clicked
+                                expandedTo = false
+                            },
+                            leadingIcon = {
+                                AsyncImage(model = currency.imageUrl, contentDescription = "")
+                            }
+                        )
+                    }
                 }
 
             }
-
 
 
         }
@@ -359,8 +359,8 @@ fun ConvertItem() {
             ) {
 
                 OutlinedTextField(
-                    value = selectedCurrencyFrom,
-                    onValueChange = {},
+                    value = state.base,
+                    onValueChange = { onEvent(ConvertEvent.SetBase(it)) },
                     readOnly = true,
                     shape = CircleShape,
                     maxLines = 1,
@@ -386,15 +386,21 @@ fun ConvertItem() {
                     onDismissRequest = { expandedFrom = false }
                 ) {
 
-                    DropdownMenuItem(text = { Text(text = "USD") }, onClick = {
-                        selectedCurrencyFrom = "USD"
-                        expandedFrom = false
-                    })
-                    DropdownMenuItem(text = { Text(text = "EGP") }, onClick = {selectedCurrencyFrom = "EGP"
-                        expandedFrom = false })
-                    DropdownMenuItem(text = { Text(text = "UKA") }, onClick = { selectedCurrencyFrom = "UKA"
-                        expandedFrom = false })
+                    state.currencies?.data?.let {
+                        it.forEach { currency ->
+                            DropdownMenuItem(
+                                text = { Text(text = currency.code) },
+                                onClick = {
+                                    onEvent(ConvertEvent.SetTarget(currency.code)) // Update the selected currency when clicked
+                                    expandedTo = false
+                                },
+                                leadingIcon = {
+                                    AsyncImage(model = currency.imageUrl, contentDescription = "")
+                                }
 
+                            )
+                        }
+                    }
 
                 }
 
@@ -412,8 +418,8 @@ fun ConvertItem() {
             )
 
             OutlinedTextField(
-                value = amountTo,
-                onValueChange = {amountTo=it},
+                value = state.resultAmount,
+                onValueChange = {},
                 shape = CircleShape,
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions.Default.copy(

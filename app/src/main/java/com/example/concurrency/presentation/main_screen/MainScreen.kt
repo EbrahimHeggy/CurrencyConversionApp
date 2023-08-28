@@ -10,18 +10,25 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.example.concurrency.presentation.common.HeaderScreen
 import com.example.concurrency.presentation.compare_screen.CompareScreen
+import com.example.concurrency.presentation.convert_screen.ConvertEvent
 import com.example.concurrency.presentation.convert_screen.ConvertScreen
+import com.example.concurrency.presentation.convert_screen.CurrencyState
 
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    state: CurrencyState,
+    onEvent: (ConvertEvent) -> Unit
+) {
 
     var isConvert by remember {
         mutableStateOf(true)
     }
     val scrollableState = rememberScrollState()
 
-    Column(modifier = Modifier.verticalScroll(scrollableState).fillMaxSize()) {
+    Column(modifier = Modifier
+        .verticalScroll(scrollableState)
+        .fillMaxSize()) {
         HeaderScreen(
             onConvertPressed = { isConvert = true },
             onComparePressed = { isConvert = false },
@@ -29,7 +36,7 @@ fun MainScreen() {
             isCompareSelected = !isConvert
         )
 
-        HandleScreens(isConvert = isConvert)
+        HandleScreens(isConvert = isConvert, state, onEvent)
     }
 
 
@@ -39,9 +46,11 @@ fun MainScreen() {
 @Composable
 fun HandleScreens(
     isConvert: Boolean,
+    state: CurrencyState,
+    onEvent: (ConvertEvent) -> Unit
 ) {
     if (isConvert) {
-        ConvertScreen()
+        ConvertScreen(state, onEvent)
     } else {
         CompareScreen()
     }
