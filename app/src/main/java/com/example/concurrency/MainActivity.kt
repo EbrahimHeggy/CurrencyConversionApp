@@ -27,20 +27,11 @@ class MainActivity : ComponentActivity() {
             ConCurrencyTheme {
                 val viewModel: ConvertViewModel = hiltViewModel()
                 val convertState = viewModel.currencyState.collectAsState().value
-                Box(modifier = Modifier.fillMaxSize()) {
-                    if (convertState.error.isNotEmpty()) {
-                        Text(
-                            text = convertState.error,
-                            fontSize = 16.sp,
-                            color = Color.Red,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    } else {
-                        MainScreen(convertState, viewModel::onEvent)
-                    }
-                }
+                MainScreen(convertState, viewModel::onEvent)
+
             }
         }
     }
 }
+
 

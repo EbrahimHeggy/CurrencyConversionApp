@@ -1,5 +1,6 @@
 package com.example.concurrency.presentation.convert_screen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.concurrency.domain.usecase.AllUseCases
@@ -53,12 +54,16 @@ class ConvertViewModel @Inject constructor(
                         _currencyState.update { state ->
                             state.copy(error = result.message ?: "")
                         }
+                        Log.e("result Currency", result.data?.data.toString())
                     }
                     is Resource.Loading -> {
                         _currencyState.update { it.copy(isLoading = true) }
+                        Log.e("result Currency", result.data?.data.toString())
+
                     }
                     is Resource.Success -> {
                         _currencyState.update { it.copy(currencies = result.data) }
+                        Log.e("result Currency", result.data?.data.toString())
                     }
                 }
             }

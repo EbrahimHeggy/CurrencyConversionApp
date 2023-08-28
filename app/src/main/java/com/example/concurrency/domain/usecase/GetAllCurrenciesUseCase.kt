@@ -12,8 +12,6 @@ class GetAllCurrenciesUseCase @Inject constructor(
     private val currencyRepository: CurrencyRepository
 ) {
 
-
-
     suspend operator fun invoke(): Flow<Resource<Currencies>> = flow {
 
         try {
