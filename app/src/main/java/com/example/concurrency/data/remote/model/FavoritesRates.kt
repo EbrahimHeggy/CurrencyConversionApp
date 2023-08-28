@@ -1,8 +1,7 @@
 package com.example.concurrency.data.remote.model
 
-
-data class Currencies(
-    val data: List<DataX>,
+data class FavoritesRates(
+    val data: DataXXX,
     val isSuccess: Boolean,
     val statusCode: Int
 )

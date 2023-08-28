@@ -14,14 +14,16 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
 import com.example.concurrency.R
+import com.example.concurrency.data.remote.model.DataX
 
 @Composable
-fun FavoriteItem(itemId: Int, context: Context) {
+fun FavoriteItem(currencyData: DataX, context: Context) {
     var isChecked by remember { mutableStateOf(false) }
 
-    // Use a unique key for each item
-    val itemKey = "item_$itemId"
+    // Use the currency code as a unique key
+    val itemKey = "item_${currencyData.code}"
 
     // Retrieve the checked state from SharedPreferences with a unique file name
     val sharedPreferences: SharedPreferences = remember {
@@ -38,8 +40,15 @@ fun FavoriteItem(itemId: Int, context: Context) {
     ) {
 
         Row {
+            // Use the currency's image URL to load the image
             Image(
-                painter = painterResource(id = R.drawable.united_kingdom_1),
+                painter = rememberImagePainter(
+                    data = currencyData.imageUrl,
+                    builder = {
+                        placeholder(R.drawable.egypt_flag) // You can set a placeholder image
+                        error(R.drawable.united_kingdom_1) // You can set an error image
+                    }
+                ),
                 contentDescription = ""
             )
 
@@ -48,7 +57,7 @@ fun FavoriteItem(itemId: Int, context: Context) {
                     .padding(start = 8.dp)
             ) {
                 Text(
-                    text = "USD",
+                    text = currencyData.name,
                     style = TextStyle(
                         fontSize = 14.sp,
                         lineHeight = 23.12.sp,
@@ -58,7 +67,7 @@ fun FavoriteItem(itemId: Int, context: Context) {
                 )
 
                 Text(
-                    text = "Currency",
+                    text = currencyData.code,
                     style = TextStyle(
                         fontSize = 14.sp,
                         lineHeight = 23.12.sp,

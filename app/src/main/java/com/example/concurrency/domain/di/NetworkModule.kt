@@ -6,6 +6,7 @@ import com.example.concurrency.domain.usecase.AllUseCases
 import com.example.concurrency.domain.usecase.GetAllCurrenciesUseCase
 import com.example.concurrency.domain.usecase.GetCompareCurrencyUseCase
 import com.example.concurrency.domain.usecase.GetConvertCurrencyUseCase
+import com.example.concurrency.domain.usecase.GetFavoritesRatesUseCase
 import com.example.concurrency.utils.Constant.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -65,20 +66,15 @@ object NetworkModule {
     fun provideAllUseCases(
         getConvertCurrencyUseCase: GetConvertCurrencyUseCase,
         getCompareCurrencyUseCase: GetCompareCurrencyUseCase,
-        getAllCurrenciesUseCase: GetAllCurrenciesUseCase
+        getAllCurrenciesUseCase: GetAllCurrenciesUseCase,
+        getFavoritesRatesUseCase: GetFavoritesRatesUseCase
     ): AllUseCases {
         return AllUseCases(
             getConvertCurrencyUseCase = getConvertCurrencyUseCase,
             getCompareCurrencyUseCase = getCompareCurrencyUseCase,
-            getAllCurrenciesUseCase = getAllCurrenciesUseCase
+            getAllCurrenciesUseCase = getAllCurrenciesUseCase,
+            getFavoritesRatesUseCase = getFavoritesRatesUseCase
         )
     }
-
-
-
-
-
-
-
 
 }

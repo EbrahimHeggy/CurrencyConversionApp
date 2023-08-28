@@ -144,6 +144,7 @@ fun CompareItem() {
                     value = selectedCurrencyToTarget1, // Use the selected currency as the value
                     onValueChange = {},
                     readOnly = true,
+                    enabled = false,
                     shape = CircleShape,
                     maxLines = 1,
                     trailingIcon = {
@@ -233,6 +234,7 @@ fun CompareItem() {
                     value = selectedCurrencyFrom,
                     onValueChange = {},
                     readOnly = true,
+                    enabled = false,
                     shape = CircleShape,
                     maxLines = 1,
                     trailingIcon = {
@@ -291,6 +293,7 @@ fun CompareItem() {
                     onValueChange = {},
                     readOnly = true,
                     shape = CircleShape,
+                    enabled = false,
                     maxLines = 1,
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(

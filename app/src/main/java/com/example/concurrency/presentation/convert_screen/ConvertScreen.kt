@@ -31,7 +31,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,14 +45,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.concurrency.presentation.favorite_screen.FavoriteBottomSheet
 import com.example.concurrency.R
+import com.example.concurrency.presentation.favorite_screen.FavoriteBottomSheet
 import com.example.concurrency.ui.theme.ButtonColor
 import com.example.concurrency.ui.theme.FiledBackground
 
 
 @Composable
 fun ConvertScreen(
+    convertViewModel: ConvertViewModel,
     state: CurrencyState,
     onEvent: (ConvertEvent) -> Unit
 ) {
@@ -151,8 +151,11 @@ fun ConvertScreen(
     }
     // Show the bottom sheet when isSheetEnabled is true
     if (isSheetEnabled) {
-        FavoriteBottomSheet {
-            isSheetEnabled = false
+        convertViewModel.currency?.let {
+            FavoriteBottomSheet (currencies = it.data
+            ) {
+                isSheetEnabled = false
+            }
         }
     }
 
@@ -362,6 +365,7 @@ fun ConvertItem(
                     value = state.base,
                     onValueChange = { onEvent(ConvertEvent.SetBase(it)) },
                     readOnly = true,
+                    enabled = false,
                     shape = CircleShape,
                     maxLines = 1,
                     trailingIcon = {

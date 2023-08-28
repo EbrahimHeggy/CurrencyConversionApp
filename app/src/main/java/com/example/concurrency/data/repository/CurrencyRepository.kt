@@ -4,6 +4,8 @@ import com.example.concurrency.data.remote.CurrencyApi
 import com.example.concurrency.data.remote.model.CompareResponse
 import com.example.concurrency.data.remote.model.ConvertResponse
 import com.example.concurrency.data.remote.model.Currencies
+import com.example.concurrency.data.remote.model.DataXXX
+import com.example.concurrency.data.remote.model.FavoritesRates
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
@@ -47,7 +49,17 @@ class CurrencyRepository @Inject constructor(
 
 
 
+    suspend fun getFavRates(
+        base: String,
+        currencyCodes: List<String>
 
+        ): Response<FavoritesRates> {
+        return withContext(Dispatchers.IO) {
+            api.postFavoritesCurrencies(
+                base,currencyCodes
+            )
+        }
+    }
 
 
 

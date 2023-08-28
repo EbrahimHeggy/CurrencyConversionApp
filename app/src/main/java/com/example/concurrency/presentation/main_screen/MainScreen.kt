@@ -13,6 +13,7 @@ import com.example.concurrency.presentation.common.HeaderScreen
 import com.example.concurrency.presentation.compare_screen.CompareScreen
 import com.example.concurrency.presentation.convert_screen.ConvertEvent
 import com.example.concurrency.presentation.convert_screen.ConvertScreen
+import com.example.concurrency.presentation.convert_screen.ConvertViewModel
 import com.example.concurrency.presentation.convert_screen.CurrencyState
 
 
@@ -21,6 +22,8 @@ fun MainScreen(
     state: CurrencyState,
     onEvent: (ConvertEvent) -> Unit
 ) {
+    val viewModel: ConvertViewModel = viewModel()
+
 
     var isConvert by remember {
         mutableStateOf(true)
@@ -37,7 +40,7 @@ fun MainScreen(
             isCompareSelected = !isConvert
         )
 
-        HandleScreens(isConvert = isConvert, state, onEvent)
+        HandleScreens(viewModel,isConvert = isConvert, state, onEvent)
     }
 
 
@@ -46,12 +49,13 @@ fun MainScreen(
 
 @Composable
 fun HandleScreens(
+    viewModel: ConvertViewModel,
     isConvert: Boolean,
     state: CurrencyState,
     onEvent: (ConvertEvent) -> Unit
 ) {
     if (isConvert) {
-        ConvertScreen(state, onEvent)
+        ConvertScreen(viewModel,state, onEvent)
     } else {
         CompareScreen()
     }
