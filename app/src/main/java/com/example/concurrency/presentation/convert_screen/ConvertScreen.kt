@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.concurrency.presentation.favorite_screen.FavoriteBottomSheet
 import com.example.concurrency.R
-import com.example.concurrency.ui.theme.ButtonColors
+import com.example.concurrency.ui.theme.ButtonColor
 import com.example.concurrency.ui.theme.FiledBackground
 
 
@@ -76,7 +76,7 @@ fun ConvertScreen(
             )
         },
         shape = CircleShape,
-        colors = ButtonDefaults.buttonColors(ButtonColors),
+        colors = ButtonDefaults.buttonColors(ButtonColor),
         modifier = Modifier
             .fillMaxWidth()
             .height(80.dp)
@@ -92,14 +92,14 @@ fun ConvertScreen(
         )
     }
 
-    Spacer(modifier = Modifier.height(10.dp))
+    Spacer(modifier = Modifier.height(5.dp))
 
 
     Divider(
-        color = Color.LightGray, modifier = Modifier
+        color = Color.LightGray, modifier = Modifier.padding(start=16.dp,end=16.dp)
     )
 
-    Spacer(modifier = Modifier.height(20.dp))
+    Spacer(modifier = Modifier.height(10.dp))
 
     Row(
         modifier = Modifier
@@ -254,7 +254,7 @@ fun ConvertItem(
             Text(
                 text = "Amount",
                 style = TextStyle(
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight(600),
                     color = Color(0xFF000000),
                 )
@@ -293,6 +293,7 @@ fun ConvertItem(
                     onValueChange = { onEvent(ConvertEvent.SetTarget(it)) },
                     readOnly = true,
                     shape = CircleShape,
+                    enabled = false,
                     maxLines = 1,
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(
@@ -346,7 +347,7 @@ fun ConvertItem(
             Text(
                 text = "From",
                 style = TextStyle(
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight(600),
                     color = Color(0xFF000000),
                 )

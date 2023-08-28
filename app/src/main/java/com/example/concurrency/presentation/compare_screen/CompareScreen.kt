@@ -5,9 +5,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -24,29 +29,64 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.concurrency.R
-
+import com.example.concurrency.ui.theme.ButtonColor
 import com.example.concurrency.ui.theme.FiledBackground
 
-
-@Preview
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompareScreen() {
 
-    var baseExpanded by remember {
+    CompareItem()
+    Spacer(modifier = Modifier.height(16.dp))
+
+    Button(
+        onClick = { },
+        shape = CircleShape,
+        colors = ButtonDefaults.buttonColors(ButtonColor),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(90.dp)
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Compare",
+            style = TextStyle(
+                fontSize = 16.sp,
+                fontWeight = FontWeight(700),
+                color = Color.White
+            )
+        )
+    }
+
+}
+
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CompareItem() {
+    var selectedCurrencyFrom by remember { mutableStateOf("EGP") } // Initial value
+    var selectedCurrencyToTarget1 by remember { mutableStateOf("EGP") } // Initial value
+    var selectedCurrencyToTarget2 by remember { mutableStateOf("EGP") } // Initial value
+
+    var amountFrom by remember { mutableStateOf("") }
+    var amountToTarget1 by remember { mutableStateOf("") }
+    var amountToTarget2 by remember { mutableStateOf("") }
+
+    var expandedFrom by remember {
         mutableStateOf(false)
     }
-    var targetExpanded by remember {
+    var expandedToTarget1 by remember {
+        mutableStateOf(false)
+    }
+    var expandedToTarget2 by remember {
         mutableStateOf(false)
     }
 
-    var targetExpanded2 by remember {
-        mutableStateOf(false)
-    }
 
     Row(
         modifier = Modifier
@@ -62,20 +102,24 @@ fun CompareScreen() {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
+            // AMOUNT FROM
             Text(
                 text = "Amount",
                 style = TextStyle(
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight(600),
                     color = Color(0xFF000000),
                 )
             )
 
             OutlinedTextField(
-                value = "1",
-                onValueChange = {},
+                value = amountFrom,
+                onValueChange = {amountFrom=it},
                 shape = CircleShape,
                 maxLines = 1,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number
+                ),
                 modifier = Modifier.background(FiledBackground)
             )
 
@@ -90,21 +134,21 @@ fun CompareScreen() {
                 )
             )
 
+            // TARGET 1 Currency DropMenu
             ExposedDropdownMenuBox(
-                expanded = targetExpanded,
-                onExpandedChange = { targetExpanded = !targetExpanded },
+                expanded = expandedToTarget1,
+                onExpandedChange = { expandedToTarget1 = it },
             ) {
 
-
                 OutlinedTextField(
-                    value = "EGP",
+                    value = selectedCurrencyToTarget1, // Use the selected currency as the value
                     onValueChange = {},
                     readOnly = true,
                     shape = CircleShape,
                     maxLines = 1,
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(
-                            expanded = targetExpanded
+                            expanded = expandedToTarget1
                         )
                     },
                     leadingIcon = {
@@ -113,31 +157,49 @@ fun CompareScreen() {
                             contentDescription = ""
                         )
                     },
-                    modifier = Modifier.background(FiledBackground).menuAnchor()
+                    modifier = Modifier
+                        .background(FiledBackground)
+                        .menuAnchor()
 
                 )
 
                 ExposedDropdownMenu(
-                    expanded = targetExpanded,
-                    onDismissRequest = { targetExpanded = false }
+                    expanded = expandedToTarget1,
+                    onDismissRequest = { expandedToTarget1 = false }
                 ) {
 
-                    DropdownMenuItem(text = { Text(text = "USD") }, onClick = { targetExpanded = false })
-                    DropdownMenuItem(text = { Text(text = "USD") }, onClick = { targetExpanded = false })
-                    DropdownMenuItem(text = { Text(text = "USD") }, onClick = { targetExpanded = false })
-
+                    DropdownMenuItem(
+                        text = { Text(text = "USD") },
+                        onClick = {
+                            selectedCurrencyToTarget1 = "USD" // Update the selected currency when clicked
+                            expandedToTarget1 = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text(text = "EGP") },
+                        onClick = {
+                            selectedCurrencyToTarget1 = "EGP" // Update the selected currency when clicked
+                            expandedToTarget1 = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text(text = "UKA") },
+                        onClick = {
+                            selectedCurrencyToTarget1 = "UKA" // Update the selected currency when clicked
+                            expandedToTarget1 = false
+                        }
+                    )
 
                 }
 
             }
 
             OutlinedTextField(
-                value = "1",
+                value = amountToTarget1,
                 onValueChange = {},
                 shape = CircleShape,
                 maxLines = 1,
-                modifier = Modifier.background(FiledBackground),
-                enabled = false
+                modifier = Modifier.background(FiledBackground)
             )
 
 
@@ -154,27 +216,28 @@ fun CompareScreen() {
             Text(
                 text = "From",
                 style = TextStyle(
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight(600),
                     color = Color(0xFF000000),
                 )
             )
 
+
+            // BASE CURRENCY DROPDOWN
             ExposedDropdownMenuBox(
-                expanded = baseExpanded,
-                onExpandedChange = { baseExpanded = !baseExpanded },
+                expanded = expandedFrom,
+                onExpandedChange = { expandedFrom = !expandedFrom },
             ) {
 
-
                 OutlinedTextField(
-                    value = "EGP",
+                    value = selectedCurrencyFrom,
                     onValueChange = {},
                     readOnly = true,
                     shape = CircleShape,
                     maxLines = 1,
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(
-                            expanded = baseExpanded
+                            expanded = expandedFrom
                         )
                     },
                     leadingIcon = {
@@ -183,18 +246,25 @@ fun CompareScreen() {
                             contentDescription = ""
                         )
                     },
-                    modifier = Modifier.background(FiledBackground).menuAnchor()
+                    modifier = Modifier
+                        .background(FiledBackground)
+                        .menuAnchor()
 
                 )
 
                 ExposedDropdownMenu(
-                    expanded = baseExpanded,
-                    onDismissRequest = { baseExpanded = false }
+                    expanded = expandedFrom,
+                    onDismissRequest = { expandedFrom = false }
                 ) {
 
-                    DropdownMenuItem(text = { Text(text = "USD") }, onClick = { baseExpanded = false })
-                    DropdownMenuItem(text = { Text(text = "USD") }, onClick = { baseExpanded = false })
-                    DropdownMenuItem(text = { Text(text = "USD") }, onClick = { baseExpanded = false })
+                    DropdownMenuItem(text = { Text(text = "USD") }, onClick = {
+                        selectedCurrencyFrom = "USD"
+                        expandedFrom = false
+                    })
+                    DropdownMenuItem(text = { Text(text = "EGP") }, onClick = {selectedCurrencyFrom = "EGP"
+                        expandedFrom = false })
+                    DropdownMenuItem(text = { Text(text = "UKA") }, onClick = { selectedCurrencyFrom = "UKA"
+                        expandedFrom = false })
 
 
                 }
@@ -210,21 +280,21 @@ fun CompareScreen() {
                 )
             )
 
+            // TARGET 2 Currency DropMenu
             ExposedDropdownMenuBox(
-                expanded = targetExpanded2,
-                onExpandedChange = { targetExpanded2 = !targetExpanded2 },
+                expanded = expandedToTarget2,
+                onExpandedChange = { expandedToTarget2 = it },
             ) {
 
-
                 OutlinedTextField(
-                    value = "EGP",
+                    value = selectedCurrencyToTarget2, // Use the selected currency as the value
                     onValueChange = {},
                     readOnly = true,
                     shape = CircleShape,
                     maxLines = 1,
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(
-                            expanded = targetExpanded2
+                            expanded = expandedToTarget2
                         )
                     },
                     leadingIcon = {
@@ -233,47 +303,50 @@ fun CompareScreen() {
                             contentDescription = ""
                         )
                     },
-                    modifier = Modifier.background(FiledBackground).menuAnchor()
+                    modifier = Modifier
+                        .background(FiledBackground)
+                        .menuAnchor()
 
                 )
 
                 ExposedDropdownMenu(
-                    expanded = targetExpanded2,
-                    onDismissRequest = { targetExpanded2 = false }
+                    expanded = expandedToTarget2,
+                    onDismissRequest = { expandedToTarget2 = false }
                 ) {
 
-                    DropdownMenuItem(text = { Text(text = "USD") }, onClick = { targetExpanded2 = false })
-                    DropdownMenuItem(text = { Text(text = "USD") }, onClick = { targetExpanded2 = false })
-                    DropdownMenuItem(text = { Text(text = "USD") }, onClick = { targetExpanded2 = false })
-
+                    DropdownMenuItem(
+                        text = { Text(text = "USD") },
+                        onClick = {
+                            selectedCurrencyToTarget2 = "USD" // Update the selected currency when clicked
+                            expandedToTarget2 = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text(text = "EGP") },
+                        onClick = {
+                            selectedCurrencyToTarget2 = "EGP" // Update the selected currency when clicked
+                            expandedToTarget2 = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text(text = "UKA") },
+                        onClick = {
+                            selectedCurrencyToTarget2 = "UKA" // Update the selected currency when clicked
+                            expandedToTarget2 = false
+                        }
+                    )
 
                 }
 
             }
 
             OutlinedTextField(
-                value = "1",
+                value = amountToTarget2,
                 onValueChange = {},
                 shape = CircleShape,
                 maxLines = 1,
                 modifier = Modifier.background(FiledBackground)
             )
-
-
         }
-
-
     }
-
-
 }
-
-
-
-
-
-
-
-
-
-

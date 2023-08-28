@@ -12,4 +12,4 @@ val Pink40 = Color(0xFF7D5260)
 
 val BorderColor = Color(0xFFC5C5C5)
 val FiledBackground = Color(0xfff8f8f8)
-val ButtonColors = Color(0xFF363636)
+val ButtonColor = Color(0xFF363636)
