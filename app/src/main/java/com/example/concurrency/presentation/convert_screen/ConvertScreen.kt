@@ -2,7 +2,6 @@ package com.example.concurrency.presentation.convert_screen
 
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -67,25 +66,7 @@ fun ConvertScreen(
     favoriteState: FavoriteCurrencyState,
     onFavoriteEvent: (FavoriteCurrencyEvent) -> Unit,
 ) {
-    var key by rememberSaveable {
-        mutableIntStateOf(favoriteState.favoriteCurrency.size)
-    }
 
-    LaunchedEffect(key1 = true) {
-        onFavoriteEvent(FavoriteCurrencyEvent.GetFavoriteCurrencies)
-
-            onEvent(
-                ConvertEvent.GetFavoriteCurrencyRates(
-                    state.base.base,
-                    favoriteState.favoriteCurrency.map {
-                        it.code
-                    }
-                )
-            )
-
-        Log.e("POST", state.currenciesRates.toString())
-
-    }
 
     var isSheetEnabled by remember {
         mutableStateOf(false)

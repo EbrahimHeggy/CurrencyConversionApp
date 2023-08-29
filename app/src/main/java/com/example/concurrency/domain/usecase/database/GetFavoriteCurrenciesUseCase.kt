@@ -12,12 +12,7 @@ class GetFavoriteCurrenciesUseCase @Inject constructor(
 ) {
 
 
-    operator fun invoke(): Flow<List<DataX>> = flow {
-
-
-        val favoriteCurrencies = repository.getFavoriteCurrencies()
-        emit(favoriteCurrencies)
-    }
+     operator fun invoke(): Flow<List<DataX>> = repository.getFavoriteCurrencies()
 
 
 

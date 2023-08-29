@@ -11,7 +11,6 @@ import com.example.concurrency.presentation.favorite_screen.FavoriteCurrencyStat
 import com.example.concurrency.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
@@ -32,8 +31,7 @@ class ConvertViewModel @Inject constructor(
 
 
     init {
-
-        getAllCurrencies()
+        onEvent(ConvertEvent.InitialScreen)
     }
 
 
@@ -55,8 +53,10 @@ class ConvertViewModel @Inject constructor(
                 getConvertedCurrency(event.base, event.target, event.amount)
             }
 
-            is ConvertEvent.GetFavoriteCurrencyRates -> {
-                getCurrenciesRate(event.base, event.codes)
+
+            ConvertEvent.InitialScreen -> {
+                getAllCurrencies()
+                getFavoriteCurrency()
             }
         }
     }
@@ -94,9 +94,12 @@ class ConvertViewModel @Inject constructor(
         }
     }
 
-    fun getCurrenciesRate(base: String, codes: List<String>) {
+    private fun getCurrenciesRate(base: String, codes: List<DataX>) {
         viewModelScope.launch {
-            useCases.postFavoritesCurrencies(base, codes).collect { result ->
+
+            val codeList = codes.map { it.code }
+
+            useCases.postFavoritesCurrencies(base, codeList).collect { result ->
 
                 when(result) {
                     is Resource.Error -> {
@@ -116,7 +119,12 @@ class ConvertViewModel @Inject constructor(
                         _currencyState.update {
                             it.copy(
                                 currenciesRates = result.data,
-                                isLoading = false
+                                isLoading = false,
+                            )
+                        }
+                        _favoriteCurrency.update {
+                            it.copy(
+                                favoriteCurrency = codes
                             )
                         }
                         Log.e("result Currency", result.data?.data.toString())
@@ -194,7 +202,7 @@ class ConvertViewModel @Inject constructor(
     private fun getFavoriteCurrency() {
         viewModelScope.launch {
             useCases.getFavoriteCurrenciesUseCase().collectLatest { result ->
-                _favoriteCurrency.update { it.copy(favoriteCurrency = result) }
+                getCurrenciesRate(_currencyState.value.base.base, result)
             }
         }
 
