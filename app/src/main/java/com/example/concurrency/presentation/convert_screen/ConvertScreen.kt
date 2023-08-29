@@ -71,7 +71,7 @@ fun ConvertScreen(
         mutableIntStateOf(favoriteState.favoriteCurrency.size)
     }
 
-    LaunchedEffect(key1 = key) {
+    LaunchedEffect(key1 = true) {
         onFavoriteEvent(FavoriteCurrencyEvent.GetFavoriteCurrencies)
 
             onEvent(
