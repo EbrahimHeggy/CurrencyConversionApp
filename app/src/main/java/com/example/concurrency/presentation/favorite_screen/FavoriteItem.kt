@@ -2,7 +2,6 @@ package com.example.concurrency.presentation.favorite_screen
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,11 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.concurrency.data.local.CurrencyEntity
-import com.example.concurrency.data.local.FavoriteDatabase
+
 import com.example.concurrency.data.remote.model.DataX
 import com.example.concurrency.presentation.convert_screen.ConvertEvent
-import kotlinx.coroutines.launch
 
 @Composable
 fun FavoriteItem(itemId: Int, context: Context, currency: DataX, onEvent: (ConvertEvent) -> Unit) {

@@ -1,9 +1,7 @@
 package com.example.concurrency.presentation.compare_screen
 
-import com.example.concurrency.data.remote.model.DataX
 import com.example.concurrency.presentation.convert_screen.Base
 import com.example.concurrency.presentation.convert_screen.Target
-import com.example.concurrency.presentation.favorite_screen.FavoriteCurrencyEvent
 
 
 sealed interface CompareEvent {
