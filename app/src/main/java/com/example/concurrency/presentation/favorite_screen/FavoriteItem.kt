@@ -71,7 +71,7 @@ fun FavoriteItem(itemId: Int, context: Context, currency: DataX, onEvent: (Favor
                 )
 
                 Text(
-                    text = "Currency",
+                    text = currency.name,
                     style = TextStyle(
                         fontSize = 14.sp,
                         lineHeight = 23.12.sp,

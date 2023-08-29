@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -91,21 +93,43 @@ fun ConvertScreen(
         mutableStateOf(false)
     }
 
-    if (state.isLoading) {
-        CircularProgressIndicator()
+    var isAmountEmptyDialogShown by remember { mutableStateOf(false) }
+
+
+    // Wrap the CircularProgressIndicator in a Box to control its visibility and layer
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        if (state.isLoading){
+            CircularProgressIndicator(
+                modifier = Modifier.size(50.dp), // Adjust size as needed
+                color = Color.DarkGray, // Match the button's background color
+                strokeWidth = 2.dp, // Customize the stroke width
+            )
+        }
+        ConvertItem(state, onEvent)
+
     }
 
-    ConvertItem(state, onEvent)
+
+
 
     Button(
         onClick = {
-            onEvent(
-                ConvertEvent.GetConvertedCurrency(
-                    state.base.base,
-                    state.target.target,
-                    state.amount.toDouble(),
+            if (state.amount.isEmpty()) {
+                // Amount is empty, show the dialog
+                isAmountEmptyDialogShown = true
+            } else {
+                // Amount is not empty, proceed with conversion
+                onEvent(
+                    ConvertEvent.GetConvertedCurrency(
+                        state.base.base,
+                        state.target.target,
+                        state.amount.toDouble(),
+                    )
                 )
-            )
+            }
         },
         shape = CircleShape,
         colors = ButtonDefaults.buttonColors(ButtonColor),
@@ -123,6 +147,30 @@ fun ConvertScreen(
             )
         )
     }
+
+    if (isAmountEmptyDialogShown) {
+        AlertDialog(
+            onDismissRequest = {
+                isAmountEmptyDialogShown = false
+            },
+            title = {
+                Text("Empty Amount")
+            },
+            text = {
+                Text("Please enter an amount before converting.")
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        isAmountEmptyDialogShown = false
+                    }
+                ) {
+                    Text("OK")
+                }
+            }
+        )
+    }
+
 
     Spacer(modifier = Modifier.height(5.dp))
 
@@ -181,6 +229,9 @@ fun ConvertScreen(
             )
         }
     }
+
+
+
     // Show the bottom sheet when isSheetEnabled is true
     if (isSheetEnabled) {
         state.currencies?.data?.let {
@@ -228,13 +279,19 @@ fun ConvertScreen(
 
 }
 
+
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConvertItem(
     state: CurrencyState,
     onEvent: (ConvertEvent) -> Unit
 ) {
-
+    // Create a separate state variable to store the selected value in the first dropdown
+    var selectedFrom by remember {
+        mutableStateOf(state.base.base)
+    }
 
     var expandedFrom by remember {
         mutableStateOf(false)
@@ -276,8 +333,6 @@ fun ConvertItem(
                 ),
                 modifier = Modifier.background(FiledBackground)
             )
-
-
 
             Text(
                 text = "To",
@@ -328,8 +383,8 @@ fun ConvertItem(
                     expanded = expandedTo,
                     onDismissRequest = { expandedTo = false }
                 ) {
-
-                    state.currencies?.data?.forEach { currency ->
+                    // Filter the items based on the selected value in the first dropdown
+                    state.currencies?.data?.filter { it.code != selectedFrom }?.forEach { currency ->
                         DropdownMenuItem(
                             text = { Text(text = currency.code) },
                             onClick = {
@@ -349,12 +404,8 @@ fun ConvertItem(
                         )
                     }
                 }
-
             }
-
-
         }
-
 
         Column(
             modifier = Modifier
@@ -378,8 +429,9 @@ fun ConvertItem(
             ) {
 
                 OutlinedTextField(
-                    value = state.base.base,
+                    value = selectedFrom, // Use the selected value from the state variable
                     onValueChange = {
+                        selectedFrom = it // Update the selected value in the state variable
                         onEvent(
                             ConvertEvent.SetBase(
                                 Base(
@@ -390,6 +442,7 @@ fun ConvertItem(
                         )
                     },
                     readOnly = true,
+                    enabled = false,
                     shape = CircleShape,
                     maxLines = 1,
                     trailingIcon = {
@@ -399,12 +452,10 @@ fun ConvertItem(
                     },
                     leadingIcon = {
                         AsyncImage(model = state.base.imageUrl, contentDescription = "")
-
                     },
                     modifier = Modifier
                         .background(FiledBackground)
                         .menuAnchor()
-
                 )
 
                 ExposedDropdownMenu(
@@ -417,6 +468,7 @@ fun ConvertItem(
                             DropdownMenuItem(
                                 text = { Text(text = currency.code) },
                                 onClick = {
+                                    selectedFrom = currency.code // Update the selected value
                                     onEvent(
                                         ConvertEvent.SetBase(
                                             Base(
@@ -430,7 +482,6 @@ fun ConvertItem(
                                 leadingIcon = {
                                     AsyncImage(model = currency.imageUrl, contentDescription = "")
                                 }
-
                             )
                         }
                     }
@@ -438,8 +489,6 @@ fun ConvertItem(
                 }
 
             }
-
-
 
             Text(
                 text = "Amount",
@@ -460,9 +509,7 @@ fun ConvertItem(
                 ),
                 modifier = Modifier.background(FiledBackground)
             )
-
         }
-
     }
 }
 
