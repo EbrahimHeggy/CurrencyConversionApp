@@ -1,0 +1,236 @@
+Index: app/src/main/java/com/example/concurrency/data/repository/CurrencyRepository.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.concurrency.data.repository\r\n\r\nimport com.example.concurrency.data.remote.CurrencyApi\r\nimport com.example.concurrency.data.remote.model.CompareResponse\r\nimport com.example.concurrency.data.remote.model.ConvertResponse\r\nimport com.example.concurrency.data.remote.model.Currencies\r\nimport kotlinx.coroutines.Dispatchers\r\nimport kotlinx.coroutines.withContext\r\nimport javax.inject.Inject\r\n\r\nclass CurrencyRepository @Inject constructor(\r\n    private val api: CurrencyApi\r\n) {\r\n    suspend fun getConversionCurrency(\r\n        base: String,\r\n        target: String,\r\n        amount: Double,\r\n\r\n        ): ConvertResponse {\r\n        return withContext(Dispatchers.IO) {\r\n            api.getConversionCurrency(\r\n               base, target,amount\r\n            )\r\n        }\r\n    }\r\n\r\n    suspend fun getAllCurrencies(): Currencies{\r\n        return withContext(Dispatchers.IO){\r\n            api.getAllCurrencies()\r\n        }\r\n    }\r\n\r\n    suspend fun getComparedCurrency(\r\n        amount: Double,\r\n        base: String,\r\n        target: String,\r\n        target2: String\r\n    ): CompareResponse {\r\n        return withContext(Dispatchers.IO){\r\n            api.getComparedCurrency(\r\n                amount,base, target, target2\r\n            )\r\n        }\r\n    }\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/concurrency/data/repository/CurrencyRepository.kt b/app/src/main/java/com/example/concurrency/data/repository/CurrencyRepository.kt
+--- a/app/src/main/java/com/example/concurrency/data/repository/CurrencyRepository.kt	(revision 0e348920e32a2d68602bdf2427e695fec7cd8220)
++++ b/app/src/main/java/com/example/concurrency/data/repository/CurrencyRepository.kt	(date 1693302565766)
+@@ -6,6 +6,7 @@
+ import com.example.concurrency.data.remote.model.Currencies
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.withContext
++import retrofit2.Response
+ import javax.inject.Inject
+ 
+ class CurrencyRepository @Inject constructor(
+Index: app/src/main/java/com/example/concurrency/presentation/compare_screen/CompareEvent.kt
+===================================================================
+diff --git a/app/src/main/java/com/example/concurrency/presentation/compare_screen/CompareEvent.kt b/app/src/main/java/com/example/concurrency/presentation/compare_screen/CompareEvent.kt
+deleted file mode 100644
+--- a/app/src/main/java/com/example/concurrency/presentation/compare_screen/CompareEvent.kt	(revision 0e348920e32a2d68602bdf2427e695fec7cd8220)
++++ /dev/null	(revision 0e348920e32a2d68602bdf2427e695fec7cd8220)
+@@ -1,20 +0,0 @@
+-package com.example.concurrency.presentation.compare_screen
+-
+-import com.example.concurrency.presentation.convert_screen.Base
+-import com.example.concurrency.presentation.convert_screen.Target
+-
+-
+-sealed interface CompareEvent {
+-    data class GetComparedCurrency(
+-        val amount: Double,
+-        val base: String,
+-        val target1: String,
+-        val target2: String,
+-    ) : CompareEvent
+-
+-    data class SetBaseAmount(val amount: String) : CompareEvent
+-    data class SetBase(val base: Base) : CompareEvent
+-    data class SetTarget1(val target1: Target) : CompareEvent
+-    data class SetTarget2(val target2: Target) : CompareEvent
+-
+-}
+Index: app/src/main/java/com/example/concurrency/data/remote/CurrencyApi.kt
+===================================================================
+diff --git a/app/src/main/java/com/example/concurrency/data/remote/CurrencyApi.kt b/app/src/main/java/com/example/concurrency/data/remote/CurrencyApi.kt
+deleted file mode 100644
+--- a/app/src/main/java/com/example/concurrency/data/remote/CurrencyApi.kt	(revision 0e348920e32a2d68602bdf2427e695fec7cd8220)
++++ /dev/null	(revision 0e348920e32a2d68602bdf2427e695fec7cd8220)
+@@ -1,36 +0,0 @@
+-package com.example.concurrency.data.remote
+-
+-import com.example.concurrency.data.remote.model.CompareResponse
+-import com.example.concurrency.data.remote.model.ConvertResponse
+-import com.example.concurrency.data.remote.model.Currencies
+-import retrofit2.http.GET
+-import retrofit2.http.Query
+-
+-interface CurrencyApi {
+-
+-
+-    @GET("currency/conversion")
+-    suspend fun getConversionCurrency(
+-        @Query("from") base: String,
+-        @Query("to1") target: String,
+-        @Query("amount") amount: Double,
+-    ): ConvertResponse
+-
+-    @GET("currency")
+-    suspend fun getAllCurrencies(): Currencies
+-
+-    @GET("currency/conversion")
+-    suspend fun getComparedCurrency(
+-        @Query("amount") amount: Double,
+-        @Query("from") base: String,
+-        @Query("to1") target: String,
+-        @Query("to2") target2: String,
+-    ): CompareResponse
+-
+-
+-
+-
+-
+-
+-
+-}
+\ No newline at end of file
+Index: app/src/main/java/com/example/concurrency/presentation/compare_screen/CompareViewModel.kt
+===================================================================
+diff --git a/app/src/main/java/com/example/concurrency/presentation/compare_screen/CompareViewModel.kt b/app/src/main/java/com/example/concurrency/presentation/compare_screen/CompareViewModel.kt
+deleted file mode 100644
+--- a/app/src/main/java/com/example/concurrency/presentation/compare_screen/CompareViewModel.kt	(revision 0e348920e32a2d68602bdf2427e695fec7cd8220)
++++ /dev/null	(revision 0e348920e32a2d68602bdf2427e695fec7cd8220)
+@@ -1,140 +0,0 @@
+-package com.example.concurrency.presentation.compare_screen
+-
+-import android.util.Log
+-import androidx.lifecycle.ViewModel
+-import androidx.lifecycle.viewModelScope
+-import com.example.concurrency.domain.usecase.AllUseCases
+-import com.example.concurrency.presentation.convert_screen.CurrencyState
+-import com.example.concurrency.utils.Resource
+-import dagger.hilt.android.lifecycle.HiltViewModel
+-import kotlinx.coroutines.flow.MutableStateFlow
+-import kotlinx.coroutines.flow.asStateFlow
+-import kotlinx.coroutines.flow.collectLatest
+-import kotlinx.coroutines.flow.update
+-import kotlinx.coroutines.launch
+-import javax.inject.Inject
+-
+-@HiltViewModel
+-class CompareViewModel @Inject constructor(
+-    private val useCases: AllUseCases
+-) : ViewModel() {
+-
+-    private val _compareState = MutableStateFlow(CurrencyState())
+-    val compareState = _compareState.asStateFlow()
+-
+-
+-    init {
+-        getAllCurrencies()
+-    }
+-
+-
+-    fun onEvent(event: CompareEvent) {
+-        when (event) {
+-            is CompareEvent.SetBase -> {
+-                _compareState.update { it.copy(base = event.base) }
+-            }
+-
+-            is CompareEvent.SetBaseAmount -> {
+-                _compareState.update { it.copy(amount = event.amount) }
+-            }
+-
+-            is CompareEvent.SetTarget1 -> {
+-                _compareState.update { it.copy(target = event.target1) }
+-            }
+-
+-            is CompareEvent.GetComparedCurrency -> {
+-                getComparedCurrencies(
+-                    event.amount, event.base, event.target1, event.target2
+-                )
+-            }
+-
+-            is CompareEvent.SetTarget2 -> {
+-                _compareState.update { it.copy(target2 = event.target2) }
+-            }
+-        }
+-    }
+-
+-
+-    private fun getAllCurrencies() {
+-        viewModelScope.launch {
+-            useCases.getAllCurrenciesUseCase().collectLatest { result ->
+-                when (result) {
+-                    is Resource.Error -> {
+-                        _compareState.update { state ->
+-                            state.copy(error = result.message ?: "", isLoading = false)
+-                        }
+-                        Log.e("result Currency", result.data?.data.toString())
+-                    }
+-
+-                    is Resource.Loading -> {
+-                        _compareState.update { it.copy(isLoading = true) }
+-                        Log.e("result Currency", result.data?.data.toString())
+-
+-                    }
+-
+-                    is Resource.Success -> {
+-                        _compareState.update {
+-                            it.copy(
+-                                currencies = result.data,
+-                                isLoading = false
+-                            )
+-                        }
+-                        Log.e("result Currency", result.data?.data.toString())
+-                    }
+-                }
+-
+-            }
+-        }
+-    }
+-
+-    private fun getComparedCurrencies(
+-        amount: Double,
+-        base: String,
+-        target1: String,
+-        target2: String
+-    ) {
+-        viewModelScope.launch {
+-            useCases.getCompareCurrencyUseCase(
+-                amount,
+-                base,
+-                target1,
+-                target2
+-            ).collectLatest { result ->
+-                when(result) {
+-                    is Resource.Error -> {
+-                        _compareState.update {
+-                            it.copy(
+-                                error = result.message ?: "",
+-                                isLoading = false
+-                            )
+-                        }
+-                    }
+-
+-                    is Resource.Loading -> {
+-                        _compareState.update { it.copy(isLoading = true) }
+-                    }
+-
+-                    is Resource.Success -> {
+-                        _compareState.update {
+-                            it.copy(
+-                                resultAmount = result.data?.data?.amount1.toString(),
+-                                resultAmount2 = result.data?.data?.amount2.toString(),
+-                                isLoading = false
+-                            )
+-                        }
+-                    }
+-                }
+-            }
+-        }
+-    }
+-
+-}
+-
+-
+-
+-
+-
+-
+-
+-
+-
