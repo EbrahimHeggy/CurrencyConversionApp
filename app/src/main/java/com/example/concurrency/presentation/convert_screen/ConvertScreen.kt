@@ -59,12 +59,11 @@ fun ConvertScreen(
 ) {
 
 
-
     var isSheetEnabled by remember {
         mutableStateOf(false)
     }
 
-    if (state.isLoading){
+    if (state.isLoading) {
         CircularProgressIndicator()
     }
 
@@ -156,8 +155,12 @@ fun ConvertScreen(
     }
     // Show the bottom sheet when isSheetEnabled is true
     if (isSheetEnabled) {
-        FavoriteBottomSheet {
-            isSheetEnabled = false
+        state.currencies?.data?.let {
+            FavoriteBottomSheet(
+                onSheetDismissed = {
+                    isSheetEnabled = false
+                }, currencies = it
+            )
         }
     }
 
@@ -233,7 +236,6 @@ fun ConvertItem(
     state: CurrencyState,
     onEvent: (ConvertEvent) -> Unit
 ) {
-
 
 
     var expandedFrom by remember {
@@ -322,7 +324,7 @@ fun ConvertItem(
                         .background(FiledBackground)
                         .menuAnchor(),
 
-                )
+                    )
 
                 ExposedDropdownMenu(
                     expanded = expandedTo,

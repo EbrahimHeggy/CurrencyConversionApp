@@ -30,21 +30,37 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.concurrency.R
+import com.example.concurrency.presentation.convert_screen.Base
+import com.example.concurrency.presentation.convert_screen.ConvertEvent
+import com.example.concurrency.presentation.convert_screen.CurrencyState
+import com.example.concurrency.presentation.convert_screen.Target
 import com.example.concurrency.ui.theme.ButtonColor
 import com.example.concurrency.ui.theme.FiledBackground
 
 @Composable
-fun CompareScreen() {
+fun CompareScreen(
+    state: CurrencyState,
+    onEvent: (CompareEvent) -> Unit
+) {
 
-    CompareItem()
+    CompareItem(state, onEvent)
     Spacer(modifier = Modifier.height(16.dp))
 
     Button(
-        onClick = { },
+        onClick = {
+            onEvent(
+                CompareEvent.GetComparedCurrency(
+                    state.amount.toDouble(),
+                    state.base.base,
+                    state.target.target,
+                    state.target2.target
+                )
+            )
+        },
         shape = CircleShape,
         colors = ButtonDefaults.buttonColors(ButtonColor),
         modifier = Modifier
@@ -65,17 +81,14 @@ fun CompareScreen() {
 }
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CompareItem() {
-    var selectedCurrencyFrom by remember { mutableStateOf("EGP") } // Initial value
-    var selectedCurrencyToTarget1 by remember { mutableStateOf("EGP") } // Initial value
-    var selectedCurrencyToTarget2 by remember { mutableStateOf("EGP") } // Initial value
+fun CompareItem(
+    state: CurrencyState,
+    onEvent: (CompareEvent) -> Unit
 
-    var amountFrom by remember { mutableStateOf("") }
-    var amountToTarget1 by remember { mutableStateOf("") }
-    var amountToTarget2 by remember { mutableStateOf("") }
+) {
+
 
     var expandedFrom by remember {
         mutableStateOf(false)
@@ -113,8 +126,8 @@ fun CompareItem() {
             )
 
             OutlinedTextField(
-                value = amountFrom,
-                onValueChange = {amountFrom=it},
+                value = state.amount,
+                onValueChange = { onEvent(CompareEvent.SetBaseAmount(it)) },
                 shape = CircleShape,
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -141,8 +154,17 @@ fun CompareItem() {
             ) {
 
                 OutlinedTextField(
-                    value = selectedCurrencyToTarget1, // Use the selected currency as the value
-                    onValueChange = {},
+                    value = state.target.target, // Use the selected currency as the value
+                    onValueChange = {
+                        onEvent(
+                            CompareEvent.SetTarget1(
+                                Target(
+                                    target = it,
+                                    imageUrl = ""
+                                )
+                            )
+                        )
+                    },
                     readOnly = true,
                     shape = CircleShape,
                     maxLines = 1,
@@ -152,10 +174,7 @@ fun CompareItem() {
                         )
                     },
                     leadingIcon = {
-                        Image(
-                            painter = painterResource(id = R.drawable.egypt_flag),
-                            contentDescription = ""
-                        )
+                        AsyncImage(model = state.target.imageUrl, contentDescription = "")
                     },
                     modifier = Modifier
                         .background(FiledBackground)
@@ -168,38 +187,40 @@ fun CompareItem() {
                     onDismissRequest = { expandedToTarget1 = false }
                 ) {
 
-                    DropdownMenuItem(
-                        text = { Text(text = "USD") },
-                        onClick = {
-                            selectedCurrencyToTarget1 = "USD" // Update the selected currency when clicked
-                            expandedToTarget1 = false
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text(text = "EGP") },
-                        onClick = {
-                            selectedCurrencyToTarget1 = "EGP" // Update the selected currency when clicked
-                            expandedToTarget1 = false
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text(text = "UKA") },
-                        onClick = {
-                            selectedCurrencyToTarget1 = "UKA" // Update the selected currency when clicked
-                            expandedToTarget1 = false
-                        }
-                    )
+                    state.currencies?.data?.forEach { currency ->
+                        DropdownMenuItem(
+                            text = { Text(text = currency.code) },
+                            onClick = {
+                                onEvent(
+                                    CompareEvent.SetTarget1(
+                                        Target(
+                                            target = currency.code,
+                                            imageUrl = currency.imageUrl
+                                        )
+                                    )
+                                )
+                                // Update the selected currency when clicked
+                                expandedToTarget1 = false
+                            },
+                            leadingIcon = {
+                                AsyncImage(model = currency.imageUrl, contentDescription = "")
+                            }
+                        )
+                    }
+
 
                 }
 
             }
 
+
             OutlinedTextField(
-                value = amountToTarget1,
+                value = state.resultAmount,
                 onValueChange = {},
                 shape = CircleShape,
                 maxLines = 1,
-                modifier = Modifier.background(FiledBackground)
+                modifier = Modifier.background(FiledBackground),
+                readOnly = true
             )
 
 
@@ -230,8 +251,10 @@ fun CompareItem() {
             ) {
 
                 OutlinedTextField(
-                    value = selectedCurrencyFrom,
-                    onValueChange = {},
+                    value = state.base.base,
+                    onValueChange = {
+                        onEvent(CompareEvent.SetBase(Base(base = it, imageUrl = "")))
+                    },
                     readOnly = true,
                     shape = CircleShape,
                     maxLines = 1,
@@ -241,10 +264,7 @@ fun CompareItem() {
                         )
                     },
                     leadingIcon = {
-                        Image(
-                            painter = painterResource(id = R.drawable.egypt_flag),
-                            contentDescription = ""
-                        )
+                        AsyncImage(model = state.base.imageUrl, contentDescription = "")
                     },
                     modifier = Modifier
                         .background(FiledBackground)
@@ -257,16 +277,28 @@ fun CompareItem() {
                     onDismissRequest = { expandedFrom = false }
                 ) {
 
-                    DropdownMenuItem(text = { Text(text = "USD") }, onClick = {
-                        selectedCurrencyFrom = "USD"
-                        expandedFrom = false
-                    })
-                    DropdownMenuItem(text = { Text(text = "EGP") }, onClick = {selectedCurrencyFrom = "EGP"
-                        expandedFrom = false })
-                    DropdownMenuItem(text = { Text(text = "UKA") }, onClick = { selectedCurrencyFrom = "UKA"
-                        expandedFrom = false })
+                    state.currencies?.data?.let {
+                        it.forEach { currency ->
+                            DropdownMenuItem(
+                                text = { Text(text = currency.code) }
+                                , onClick = {
+                                    onEvent(
+                                        CompareEvent.SetBase(
+                                            Base(
+                                                base = currency.code,
+                                                imageUrl = currency.imageUrl
+                                            )
+                                        )
+                                    )
+                                    expandedFrom = false
+                                },
+                                leadingIcon = {
+                                    AsyncImage(model = currency.imageUrl, contentDescription = "")
+                                }
 
-
+                            )
+                        }
+                    }
                 }
 
             }
@@ -287,8 +319,10 @@ fun CompareItem() {
             ) {
 
                 OutlinedTextField(
-                    value = selectedCurrencyToTarget2, // Use the selected currency as the value
-                    onValueChange = {},
+                    value = state.target2.target, // Use the selected currency as the value
+                    onValueChange = {
+                        onEvent(CompareEvent.SetTarget2(Target(target = it, imageUrl = "")))
+                    },
                     readOnly = true,
                     shape = CircleShape,
                     maxLines = 1,
@@ -298,10 +332,7 @@ fun CompareItem() {
                         )
                     },
                     leadingIcon = {
-                        Image(
-                            painter = painterResource(id = R.drawable.egypt_flag),
-                            contentDescription = ""
-                        )
+                        AsyncImage(model = state.target2.imageUrl, contentDescription = "")
                     },
                     modifier = Modifier
                         .background(FiledBackground)
@@ -314,34 +345,34 @@ fun CompareItem() {
                     onDismissRequest = { expandedToTarget2 = false }
                 ) {
 
-                    DropdownMenuItem(
-                        text = { Text(text = "USD") },
-                        onClick = {
-                            selectedCurrencyToTarget2 = "USD" // Update the selected currency when clicked
-                            expandedToTarget2 = false
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text(text = "EGP") },
-                        onClick = {
-                            selectedCurrencyToTarget2 = "EGP" // Update the selected currency when clicked
-                            expandedToTarget2 = false
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text(text = "UKA") },
-                        onClick = {
-                            selectedCurrencyToTarget2 = "UKA" // Update the selected currency when clicked
-                            expandedToTarget2 = false
-                        }
-                    )
+                    state.currencies?.data?.let {
+                        it.forEach { currency ->
+                            DropdownMenuItem(
+                                text = { Text(text = currency.code) },
+                                onClick = {
+                                    onEvent(
+                                        CompareEvent.SetTarget2(
+                                            Target(
+                                                target = currency.code,
+                                                imageUrl = currency.imageUrl
+                                            )
+                                        )
+                                    )
+                                    expandedToTarget2 = false
+                                },
+                                leadingIcon = {
+                                    AsyncImage(model = currency.imageUrl, contentDescription = "")
+                                }
 
+                            )
+                        }
+                    }
                 }
 
             }
 
             OutlinedTextField(
-                value = amountToTarget2,
+                value = state.resultAmount2,
                 onValueChange = {},
                 shape = CircleShape,
                 maxLines = 1,

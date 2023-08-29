@@ -9,7 +9,6 @@ sealed interface ConvertEvent {
     data class SetBase(val base: Base) : ConvertEvent
     data class SetTarget(val target: Target) : ConvertEvent
 
-    data class SetImage(val url: String): ConvertEvent
 
 }
 

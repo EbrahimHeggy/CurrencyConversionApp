@@ -46,9 +46,6 @@ class ConvertViewModel @Inject constructor(
                 getConvertedCurrency(event.base, event.target, event.amount)
             }
 
-            is ConvertEvent.SetImage -> {
-
-            }
         }
     }
 

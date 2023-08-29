@@ -8,19 +8,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.concurrency.presentation.common.HeaderScreen
 import com.example.concurrency.presentation.compare_screen.CompareScreen
-import com.example.concurrency.presentation.convert_screen.ConvertEvent
+import com.example.concurrency.presentation.compare_screen.CompareViewModel
 import com.example.concurrency.presentation.convert_screen.ConvertScreen
-import com.example.concurrency.presentation.convert_screen.CurrencyState
+import com.example.concurrency.presentation.convert_screen.ConvertViewModel
 
 
 @Composable
-fun MainScreen(
-    state: CurrencyState,
-    onEvent: (ConvertEvent) -> Unit
-) {
+fun MainScreen() {
 
     var isConvert by remember {
         mutableStateOf(true)
@@ -37,7 +34,7 @@ fun MainScreen(
             isCompareSelected = !isConvert
         )
 
-        HandleScreens(isConvert = isConvert, state, onEvent)
+        HandleScreens(isConvert = isConvert)
     }
 
 
@@ -47,13 +44,18 @@ fun MainScreen(
 @Composable
 fun HandleScreens(
     isConvert: Boolean,
-    state: CurrencyState,
-    onEvent: (ConvertEvent) -> Unit
 ) {
+
+    val convertViewModel: ConvertViewModel = hiltViewModel()
+    val convertState by convertViewModel.currencyState.collectAsState()
+
+    val compareViewModel: CompareViewModel = hiltViewModel()
+    val compareState by compareViewModel.compareState.collectAsState()
+
     if (isConvert) {
-        ConvertScreen(state, onEvent)
+        ConvertScreen(convertState, convertViewModel::onEvent)
     } else {
-        CompareScreen()
+        CompareScreen(compareState, compareViewModel::onEvent)
     }
 }
 

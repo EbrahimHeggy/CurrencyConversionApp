@@ -14,10 +14,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.concurrency.R
+import com.example.concurrency.data.remote.model.DataX
 
 @Composable
-fun FavoriteItem(itemId: Int, context: Context) {
+fun FavoriteItem(itemId: Int, context: Context, currency: DataX) {
     var isChecked by remember { mutableStateOf(false) }
 
     // Use a unique key for each item
@@ -38,17 +40,14 @@ fun FavoriteItem(itemId: Int, context: Context) {
     ) {
 
         Row {
-            Image(
-                painter = painterResource(id = R.drawable.united_kingdom_1),
-                contentDescription = ""
-            )
+            AsyncImage(model = currency.imageUrl, contentDescription = "")
 
             Column(
                 modifier = Modifier
                     .padding(start = 8.dp)
             ) {
                 Text(
-                    text = "USD",
+                    text = currency.code,
                     style = TextStyle(
                         fontSize = 14.sp,
                         lineHeight = 23.12.sp,

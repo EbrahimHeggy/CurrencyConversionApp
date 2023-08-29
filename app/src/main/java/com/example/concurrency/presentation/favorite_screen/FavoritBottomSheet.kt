@@ -8,12 +8,13 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import com.example.concurrency.data.remote.model.DataX
 
 
 @SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoriteBottomSheet(onSheetDismissed: () -> Unit) {
+fun FavoriteBottomSheet(onSheetDismissed: () -> Unit, currencies: List<DataX>) {
     val context = LocalContext.current
     val favoriteSheetState = rememberModalBottomSheetState()
 
@@ -23,8 +24,8 @@ fun FavoriteBottomSheet(onSheetDismissed: () -> Unit) {
             onDismissRequest = { onSheetDismissed() }
         ) {
             LazyColumn() {
-                items(10) {
-                    FavoriteItem(it, context = context)
+                items(currencies.size) {
+                    FavoriteItem(it, context = context, currencies[it])
                 }
             }
 
