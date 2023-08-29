@@ -50,7 +50,6 @@ fun HandleScreens(
 
     val convertViewModel: ConvertViewModel = hiltViewModel()
     val convertState by convertViewModel.currencyState.collectAsState()
-    val favoriteState by convertViewModel.favoriteCurrency.collectAsState()
 
     val compareViewModel: CompareViewModel = hiltViewModel()
     val compareState by compareViewModel.compareState.collectAsState()
@@ -59,8 +58,6 @@ fun HandleScreens(
         ConvertScreen(
             convertState,
             convertViewModel::onEvent,
-            favoriteState,
-            convertViewModel::onDatabaseEvent
         )
     } else {
         CompareScreen(compareState, compareViewModel::onEvent)

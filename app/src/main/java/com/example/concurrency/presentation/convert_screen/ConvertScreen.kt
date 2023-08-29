@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -32,18 +33,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -51,9 +47,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.concurrency.presentation.favorite_screen.FavoriteBottomSheet
-import com.example.concurrency.R
-import com.example.concurrency.presentation.favorite_screen.FavoriteCurrencyEvent
-import com.example.concurrency.presentation.favorite_screen.FavoriteCurrencyState
 import com.example.concurrency.presentation.favorite_screen.FavoriteList
 import com.example.concurrency.ui.theme.ButtonColor
 import com.example.concurrency.ui.theme.FiledBackground
@@ -63,8 +56,6 @@ import com.example.concurrency.ui.theme.FiledBackground
 fun ConvertScreen(
     state: CurrencyState,
     onEvent: (ConvertEvent) -> Unit,
-    favoriteState: FavoriteCurrencyState,
-    onFavoriteEvent: (FavoriteCurrencyEvent) -> Unit,
 ) {
 
 
@@ -72,9 +63,6 @@ fun ConvertScreen(
         mutableStateOf(false)
     }
 
-    if (state.isLoading) {
-        CircularProgressIndicator()
-    }
 
     ConvertItem(state, onEvent)
 
@@ -169,7 +157,7 @@ fun ConvertScreen(
                 onSheetDismissed = {
                     isSheetEnabled = false
                 }, currencies = it,
-                onFavoriteEvent
+                onEvent
             )
         }
     }
@@ -195,11 +183,12 @@ fun ConvertScreen(
         LazyColumn(
             modifier = Modifier.height(200.dp)
         ) {
-            items(favoriteState.favoriteCurrency.size) {
-                FavoriteList(currency = favoriteState.favoriteCurrency[it],
+            items(state.favoriteCurrency.size) {
+                FavoriteList(
+                    currency = state.favoriteCurrency[it],
                     state.currenciesRates?.data?.currencies?.get(it)?.rate.toString()
                 )
-                Log.e("favorite list", favoriteState.favoriteCurrency.size.toString())
+                Log.e("favorite list", state.favoriteCurrency.size.toString())
             }
 
         }
@@ -224,226 +213,270 @@ fun ConvertItem(
         mutableStateOf(false)
     }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-
-        Column(
-            modifier = Modifier
-                .padding(6.dp)
-                .weight(1f),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+    if (state.isLoading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-
-            Text(
-                text = "Amount",
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight(600),
-                    color = Color(0xFF000000),
-                )
+            CircularProgressIndicator(
+                modifier = Modifier.size(50.dp), // Adjust size as needed
+                color = Color.DarkGray, // Match the button's background color
             )
-
-            OutlinedTextField(
-                value = state.amount,
-                onValueChange = { onEvent(ConvertEvent.SetBaseAmount(it)) },
-                shape = CircleShape,
-                maxLines = 1,
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Number
-                ),
-                modifier = Modifier.background(FiledBackground)
-            )
-
-
-
-            Text(
-                text = "To",
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight(600),
-                    color = Color(0xFF000000),
-                )
-            )
-
-            // To Currency DropMenu
-            ExposedDropdownMenuBox(
-                expanded = expandedTo,
-                onExpandedChange = { expandedTo = it },
-            ) {
-
-                OutlinedTextField(
-                    value = state.target.target, // Use the selected currency as the value
-                    onValueChange = {
-                        onEvent(
-                            ConvertEvent.SetTarget(
-                                Target(
-                                    target = it,
-                                    imageUrl = ""
-                                )
-                            )
-                        )
-                    },
-                    readOnly = true,
-                    shape = CircleShape,
-                    enabled = false,
-                    maxLines = 1,
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(
-                            expanded = expandedTo
-                        )
-                    },
-                    leadingIcon = {
-                        AsyncImage(model = state.target.imageUrl, contentDescription = "")
-                    },
-                    modifier = Modifier
-                        .background(FiledBackground)
-                        .menuAnchor(),
-
-                    )
-
-                ExposedDropdownMenu(
-                    expanded = expandedTo,
-                    onDismissRequest = { expandedTo = false }
-                ) {
-
-                    state.currencies?.data?.forEach { currency ->
-                        DropdownMenuItem(
-                            text = { Text(text = currency.code) },
-                            onClick = {
-                                onEvent(
-                                    ConvertEvent.SetTarget(
-                                        Target(
-                                            target = currency.code,
-                                            imageUrl = currency.imageUrl
-                                        )
-                                    )
-                                ) // Update the selected currency when clicked
-                                expandedTo = false
-                            },
-                            leadingIcon = {
-                                AsyncImage(model = currency.imageUrl, contentDescription = "")
-                            }
-                        )
-                    }
-                }
-
-            }
-
 
         }
+    }
 
-
-        Column(
+    if (state.error.isNotEmpty()) {
+        Box(
             modifier = Modifier
-                .padding(6.dp)
-                .weight(1f),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .fillMaxSize()
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = state.error, fontSize = 18.sp, color = Color.Red)
+
+        }
+    } else {
+
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
 
-            Text(
-                text = "From",
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight(600),
-                    color = Color(0xFF000000),
-                )
-            )
-
-            ExposedDropdownMenuBox(
-                expanded = expandedFrom,
-                onExpandedChange = { expandedFrom = !expandedFrom },
+            Column(
+                modifier = Modifier
+                    .padding(6.dp)
+                    .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
 
-                OutlinedTextField(
-                    value = state.base.base,
-                    onValueChange = {
-                        onEvent(
-                            ConvertEvent.SetBase(
-                                Base(
-                                    base = it,
-                                    imageUrl = ""
-                                )
-                            )
-                        )
-                    },
-                    readOnly = true,
-                    shape = CircleShape,
-                    maxLines = 1,
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(
-                            expanded = expandedFrom
-                        )
-                    },
-                    leadingIcon = {
-                        AsyncImage(model = state.base.imageUrl, contentDescription = "")
-
-                    },
-                    modifier = Modifier
-                        .background(FiledBackground)
-                        .menuAnchor()
-
+                Text(
+                    text = "Amount",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight(600),
+                        color = Color(0xFF000000),
+                    )
                 )
 
-                ExposedDropdownMenu(
-                    expanded = expandedFrom,
-                    onDismissRequest = { expandedFrom = false }
+                OutlinedTextField(
+                    value = state.amount,
+                    onValueChange = { onEvent(ConvertEvent.SetBaseAmount(it)) },
+                    shape = CircleShape,
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    modifier = Modifier.background(FiledBackground)
+                )
+
+
+
+                Text(
+                    text = "To",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight(600),
+                        color = Color(0xFF000000),
+                    )
+                )
+
+                // To Currency DropMenu
+                ExposedDropdownMenuBox(
+                    expanded = expandedTo,
+                    onExpandedChange = { expandedTo = it },
                 ) {
 
-                    state.currencies?.data?.let {
-                        it.forEach { currency ->
+                    OutlinedTextField(
+                        value = state.target.target, // Use the selected currency as the value
+                        onValueChange = {
+                            onEvent(
+                                ConvertEvent.SetTarget(
+                                    Target(
+                                        target = it,
+                                        imageUrl = ""
+                                    )
+                                )
+                            )
+                        },
+                        readOnly = true,
+                        shape = CircleShape,
+                        enabled = false,
+                        maxLines = 1,
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(
+                                expanded = expandedTo
+                            )
+                        },
+                        leadingIcon = {
+                            AsyncImage(
+                                model = state.target.imageUrl,
+                                contentDescription = "",
+                                modifier = Modifier.size(24.dp)
+                            )
+                        },
+                        modifier = Modifier
+                            .background(FiledBackground)
+                            .menuAnchor(),
+
+                        )
+
+                    ExposedDropdownMenu(
+                        expanded = expandedTo,
+                        onDismissRequest = { expandedTo = false }
+                    ) {
+
+                        state.currencies?.data?.forEach { currency ->
                             DropdownMenuItem(
                                 text = { Text(text = currency.code) },
                                 onClick = {
                                     onEvent(
-                                        ConvertEvent.SetBase(
-                                            Base(
-                                                base = currency.code,
+                                        ConvertEvent.SetTarget(
+                                            Target(
+                                                target = currency.code,
                                                 imageUrl = currency.imageUrl
                                             )
                                         )
                                     ) // Update the selected currency when clicked
-                                    expandedFrom = false
+                                    expandedTo = false
                                 },
                                 leadingIcon = {
-                                    AsyncImage(model = currency.imageUrl, contentDescription = "")
+                                    AsyncImage(
+                                        model = currency.imageUrl,
+                                        contentDescription = "",
+                                        modifier = Modifier.size(24.dp)
+                                    )
                                 }
-
                             )
                         }
                     }
 
                 }
 
+
             }
 
 
+            Column(
+                modifier = Modifier
+                    .padding(6.dp)
+                    .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
 
-            Text(
-                text = "Amount",
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight(600),
-                    color = Color(0xFF000000),
+                Text(
+                    text = "From",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight(600),
+                        color = Color(0xFF000000),
+                    )
                 )
-            )
 
-            OutlinedTextField(
-                value = state.resultAmount,
-                onValueChange = {},
-                shape = CircleShape,
-                maxLines = 1,
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Number
-                ),
-                modifier = Modifier.background(FiledBackground)
-            )
+                ExposedDropdownMenuBox(
+                    expanded = expandedFrom,
+                    onExpandedChange = { expandedFrom = !expandedFrom },
+                ) {
+
+                    OutlinedTextField(
+                        value = state.base.base,
+                        onValueChange = {
+                            onEvent(
+                                ConvertEvent.SetBase(
+                                    Base(
+                                        base = it,
+                                        imageUrl = ""
+                                    )
+                                )
+                            )
+                        },
+                        readOnly = true,
+                        shape = CircleShape,
+                        maxLines = 1,
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(
+                                expanded = expandedFrom
+                            )
+                        },
+                        leadingIcon = {
+                            AsyncImage(
+                                model = state.base.imageUrl,
+                                contentDescription = "",
+                                modifier = Modifier.size(24.dp)
+                            )
+
+                        },
+                        modifier = Modifier
+                            .background(FiledBackground)
+                            .menuAnchor()
+
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = expandedFrom,
+                        onDismissRequest = { expandedFrom = false }
+                    ) {
+
+                        state.currencies?.data?.let {
+                            it.forEach { currency ->
+                                DropdownMenuItem(
+                                    text = { Text(text = currency.code) },
+                                    onClick = {
+                                        onEvent(
+                                            ConvertEvent.SetBase(
+                                                Base(
+                                                    base = currency.code,
+                                                    imageUrl = currency.imageUrl
+                                                )
+                                            )
+                                        ) // Update the selected currency when clicked
+                                        expandedFrom = false
+                                    },
+                                    leadingIcon = {
+                                        AsyncImage(
+                                            model = currency.imageUrl,
+                                            contentDescription = "",
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                    }
+
+                                )
+                            }
+                        }
+
+                    }
+
+                }
+
+
+
+                Text(
+                    text = "Amount",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight(600),
+                        color = Color(0xFF000000),
+                    )
+                )
+
+                OutlinedTextField(
+                    value = state.resultAmount,
+                    onValueChange = {},
+                    shape = CircleShape,
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    modifier = Modifier.background(FiledBackground)
+                )
+
+            }
 
         }
-
     }
+
 }
 

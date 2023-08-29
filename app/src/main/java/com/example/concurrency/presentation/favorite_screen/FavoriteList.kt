@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +40,11 @@ fun FavoriteList(currency: DataX, rate: String) {
     ) {
 
         Row {
-            AsyncImage(model = currency.imageUrl, contentDescription = "")
+            AsyncImage(
+                model = currency.imageUrl,
+                contentDescription = "",
+                modifier = Modifier.size(24.dp)
+            )
 
             Column(
                 modifier = Modifier
@@ -56,7 +61,7 @@ fun FavoriteList(currency: DataX, rate: String) {
                 )
 
                 Text(
-                    text = "Currency",
+                    text = currency.name,
                     style = TextStyle(
                         fontSize = 14.sp,
                         lineHeight = 23.12.sp,

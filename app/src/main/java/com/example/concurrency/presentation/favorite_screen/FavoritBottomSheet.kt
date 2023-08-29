@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import com.example.concurrency.data.remote.model.DataX
+import com.example.concurrency.presentation.convert_screen.ConvertEvent
 
 
 @SuppressLint("SuspiciousIndentation")
@@ -17,7 +18,7 @@ import com.example.concurrency.data.remote.model.DataX
 fun FavoriteBottomSheet(
     onSheetDismissed: () -> Unit,
     currencies: List<DataX>,
-    onEvent: (FavoriteCurrencyEvent) -> Unit
+    onEvent: (ConvertEvent) -> Unit
 ) {
     val context = LocalContext.current
     val favoriteSheetState = rememberModalBottomSheetState()

@@ -6,13 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.concurrency.data.remote.model.DataX
 import com.example.concurrency.data.repository.CurrencyRepository
 import com.example.concurrency.domain.usecase.AllUseCases
-import com.example.concurrency.presentation.favorite_screen.FavoriteCurrencyEvent
-import com.example.concurrency.presentation.favorite_screen.FavoriteCurrencyState
 import com.example.concurrency.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,8 +25,6 @@ class ConvertViewModel @Inject constructor(
     private val _currencyState = MutableStateFlow(CurrencyState())
     val currencyState = _currencyState.asStateFlow()
 
-    private val _favoriteCurrency = MutableStateFlow(FavoriteCurrencyState())
-    val favoriteCurrency = _favoriteCurrency.asStateFlow()
 
 
     init {
@@ -53,14 +50,21 @@ class ConvertViewModel @Inject constructor(
                 getConvertedCurrency(event.base, event.target, event.amount)
             }
 
-
             ConvertEvent.InitialScreen -> {
                 getAllCurrencies()
                 getFavoriteCurrency()
             }
+
+            is ConvertEvent.DeleteCurrency -> {
+                deleteCurrency(event.currencyEntity)
+            }
+
+            is ConvertEvent.InsertCurrency -> {
+                insertCurrency(event.currencyEntity)
+
+            }
         }
     }
-
 
     private fun getAllCurrencies() {
         viewModelScope.launch {
@@ -94,12 +98,9 @@ class ConvertViewModel @Inject constructor(
         }
     }
 
-    private fun getCurrenciesRate(base: String, codes: List<DataX>) {
+    private fun getCurrenciesRate(base: String, codes: List<String>) {
         viewModelScope.launch {
-
-            val codeList = codes.map { it.code }
-
-            useCases.postFavoritesCurrencies(base, codeList).collect { result ->
+            useCases.postFavoritesCurrencies(base, codes).collect { result ->
 
                 when(result) {
                     is Resource.Error -> {
@@ -119,12 +120,7 @@ class ConvertViewModel @Inject constructor(
                         _currencyState.update {
                             it.copy(
                                 currenciesRates = result.data,
-                                isLoading = false,
-                            )
-                        }
-                        _favoriteCurrency.update {
-                            it.copy(
-                                favoriteCurrency = codes
+                                isLoading = false
                             )
                         }
                         Log.e("result Currency", result.data?.data.toString())
@@ -169,23 +165,6 @@ class ConvertViewModel @Inject constructor(
     }
 
 
-    fun onDatabaseEvent(event: FavoriteCurrencyEvent) {
-        when (event) {
-            is FavoriteCurrencyEvent.DeleteCurrency -> {
-                deleteCurrency(event.currencyEntity)
-            }
-
-            is FavoriteCurrencyEvent.InsertCurrency -> {
-                insertCurrency(event.currencyEntity)
-            }
-
-            FavoriteCurrencyEvent.GetFavoriteCurrencies -> {
-                getFavoriteCurrency()
-
-            }
-        }
-    }
-
 
     private fun insertCurrency(currencyEntity: DataX) {
         viewModelScope.launch {
@@ -202,7 +181,14 @@ class ConvertViewModel @Inject constructor(
     private fun getFavoriteCurrency() {
         viewModelScope.launch {
             useCases.getFavoriteCurrenciesUseCase().collectLatest { result ->
-                getCurrenciesRate(_currencyState.value.base.base, result)
+                _currencyState.update {
+                    it.copy(favoriteCurrency = result)
+                }
+
+                val codes = result.map {
+                    it.code
+                }
+                getCurrenciesRate(_currencyState.value.base.base, codes)
             }
         }
 

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,13 +28,13 @@ import coil.compose.AsyncImage
 import com.example.concurrency.data.local.CurrencyEntity
 import com.example.concurrency.data.local.FavoriteDatabase
 import com.example.concurrency.data.remote.model.DataX
+import com.example.concurrency.presentation.convert_screen.ConvertEvent
 import kotlinx.coroutines.launch
 
 @Composable
-fun FavoriteItem(itemId: Int, context: Context, currency: DataX, onEvent: (FavoriteCurrencyEvent) -> Unit) {
+fun FavoriteItem(itemId: Int, context: Context, currency: DataX, onEvent: (ConvertEvent) -> Unit) {
     var isChecked by remember { mutableStateOf(false) }
 
-    val scope = rememberCoroutineScope()
 
     // Use a unique key for each item
     val itemKey = "item_$itemId"
@@ -54,7 +55,11 @@ fun FavoriteItem(itemId: Int, context: Context, currency: DataX, onEvent: (Favor
     ) {
 
         Row {
-            AsyncImage(model = currency.imageUrl, contentDescription = "")
+            AsyncImage(
+                model = currency.imageUrl,
+                contentDescription = "",
+                modifier = Modifier.size(24.dp)
+            )
 
             Column(
                 modifier = Modifier
@@ -71,7 +76,7 @@ fun FavoriteItem(itemId: Int, context: Context, currency: DataX, onEvent: (Favor
                 )
 
                 Text(
-                    text = "Currency",
+                    text = currency.name,
                     style = TextStyle(
                         fontSize = 14.sp,
                         lineHeight = 23.12.sp,
@@ -90,9 +95,9 @@ fun FavoriteItem(itemId: Int, context: Context, currency: DataX, onEvent: (Favor
                 sharedPreferences.edit().putBoolean(itemKey, newCheckedState).apply()
 
                 if (newCheckedState) {
-                    onEvent(FavoriteCurrencyEvent.InsertCurrency(currency))
+                    onEvent(ConvertEvent.InsertCurrency(currency))
                 } else {
-                    onEvent(FavoriteCurrencyEvent.DeleteCurrency(currency))
+                    onEvent(ConvertEvent.DeleteCurrency(currency))
                 }
 
             }
