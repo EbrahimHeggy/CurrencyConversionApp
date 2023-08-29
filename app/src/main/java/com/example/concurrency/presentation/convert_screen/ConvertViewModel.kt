@@ -3,10 +3,13 @@ package com.example.concurrency.presentation.convert_screen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.concurrency.data.local.CurrencyEntity
+import com.example.concurrency.data.repository.CurrencyRepository
 import com.example.concurrency.domain.usecase.AllUseCases
 import com.example.concurrency.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
@@ -16,8 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ConvertViewModel @Inject constructor(
     private val useCases: AllUseCases,
-) : ViewModel() {
 
+) : ViewModel() {
 
     private val _currencyState = MutableStateFlow(CurrencyState())
     val currencyState = _currencyState.asStateFlow()
@@ -25,7 +28,9 @@ class ConvertViewModel @Inject constructor(
 
     init {
         getAllCurrencies()
+
     }
+
 
 
     fun onEvent(event: ConvertEvent) {
@@ -117,7 +122,9 @@ class ConvertViewModel @Inject constructor(
     }
 
 
+
 }
+
 
 
 

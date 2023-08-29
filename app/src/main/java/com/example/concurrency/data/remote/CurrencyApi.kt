@@ -3,7 +3,10 @@ package com.example.concurrency.data.remote
 import com.example.concurrency.data.remote.model.CompareResponse
 import com.example.concurrency.data.remote.model.ConvertResponse
 import com.example.concurrency.data.remote.model.Currencies
+import com.example.concurrency.data.remote.model.FavoriteRates
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface CurrencyApi {
@@ -27,6 +30,11 @@ interface CurrencyApi {
         @Query("to2") target2: String,
     ): CompareResponse
 
+    @POST("currency")
+    suspend fun postFavoritesCurrencies(
+        @Query("base") base: String,
+        @Body currencyCodes: List<String>
+    ): FavoriteRates
 
 
 

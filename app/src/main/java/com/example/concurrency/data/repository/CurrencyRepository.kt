@@ -1,21 +1,24 @@
 package com.example.concurrency.data.repository
 
+import com.example.concurrency.data.local.CurrencyEntity
+import com.example.concurrency.data.local.FavoriteDatabase
 import com.example.concurrency.data.remote.CurrencyApi
 import com.example.concurrency.data.remote.model.CompareResponse
 import com.example.concurrency.data.remote.model.ConvertResponse
 import com.example.concurrency.data.remote.model.Currencies
+import com.example.concurrency.data.remote.model.FavoriteRates
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CurrencyRepository @Inject constructor(
-    private val api: CurrencyApi
+    private val api: CurrencyApi,
+
 ) {
     suspend fun getConversionCurrency(
         base: String,
         target: String,
         amount: Double,
-
         ): ConvertResponse {
         return withContext(Dispatchers.IO) {
             api.getConversionCurrency(
@@ -44,12 +47,15 @@ class CurrencyRepository @Inject constructor(
     }
 
 
-
-
-
-
-
-
-
+    suspend fun getFavRates(
+        base: String,
+        currencyCodes: List<String>
+    ): FavoriteRates {
+        return withContext(Dispatchers.IO) {
+            api.postFavoritesCurrencies(
+                base,currencyCodes
+            )
+        }
+    }
 
 }
