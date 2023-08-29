@@ -18,5 +18,5 @@ interface FavCurrencyDao {
     suspend fun deleteCurrency(currency: DataX)
 
     @Query("SELECT * FROM fav_currencies")
-    suspend fun getAllCurrencies(): List<DataX>
+    fun getAllCurrencies(): Flow<List<DataX>>
 }

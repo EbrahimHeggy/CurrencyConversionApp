@@ -42,7 +42,6 @@ import coil.compose.AsyncImage
 import com.example.concurrency.R
 import com.example.concurrency.presentation.convert_screen.Base
 import com.example.concurrency.presentation.convert_screen.ConvertEvent
-import com.example.concurrency.presentation.convert_screen.ConvertItem
 import com.example.concurrency.presentation.convert_screen.CurrencyState
 import com.example.concurrency.presentation.convert_screen.Target
 import com.example.concurrency.ui.theme.ButtonColor
@@ -62,6 +61,7 @@ fun CompareScreen(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
+
         if (state.isLoading){
             CircularProgressIndicator(
                 modifier = Modifier.size(50.dp), // Adjust size as needed
@@ -72,9 +72,6 @@ fun CompareScreen(
         CompareItem(state, onEvent)
 
     }
-
-
-    Spacer(modifier = Modifier.height(16.dp))
 
     Button(
         onClick = {
@@ -110,6 +107,7 @@ fun CompareScreen(
         )
     }
 
+
     if (isAmountEmptyDialogShown) {
         AlertDialog(
             onDismissRequest = {
@@ -135,10 +133,9 @@ fun CompareScreen(
 
 
 
-
+    Spacer(modifier = Modifier.height(16.dp))
 
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -227,7 +224,7 @@ fun CompareItem(
                         )
                     },
                     leadingIcon = {
-                        AsyncImage(model = state.target.imageUrl, contentDescription = "")
+                        AsyncImage(model = state.target.imageUrl, modifier = Modifier.size(24.dp),contentDescription = "")
                     },
                     modifier = Modifier
                         .background(FiledBackground)
@@ -255,7 +252,7 @@ fun CompareItem(
                                     expandedToTarget1 = false
                                 },
                                 leadingIcon = {
-                                    AsyncImage(model = currency.imageUrl, contentDescription = "")
+                                    AsyncImage(model = currency.imageUrl, modifier = Modifier.size(24.dp), contentDescription = "")
                                 }
                             )
                         }
@@ -305,7 +302,7 @@ fun CompareItem(
                         )
                     },
                     leadingIcon = {
-                        AsyncImage(model = state.base.imageUrl, contentDescription = "")
+                        AsyncImage(model = state.base.imageUrl, modifier = Modifier.size(24.dp), contentDescription = "")
                     },
                     modifier = Modifier
                         .background(FiledBackground)
@@ -333,7 +330,7 @@ fun CompareItem(
                                     expandedFrom = false
                                 },
                                 leadingIcon = {
-                                    AsyncImage(model = currency.imageUrl, contentDescription = "")
+                                    AsyncImage(model = currency.imageUrl, modifier = Modifier.size(24.dp), contentDescription = "")
                                 }
                             )
                         }
@@ -368,7 +365,7 @@ fun CompareItem(
                         )
                     },
                     leadingIcon = {
-                        AsyncImage(model = state.target2.imageUrl, contentDescription = "")
+                        AsyncImage(model = state.target2.imageUrl, modifier = Modifier.size(24.dp), contentDescription = "")
                     },
                     modifier = Modifier
                         .background(FiledBackground)
@@ -396,7 +393,7 @@ fun CompareItem(
                                     expandedToTarget2 = false
                                 },
                                 leadingIcon = {
-                                    AsyncImage(model = currency.imageUrl, contentDescription = "")
+                                    AsyncImage(model = currency.imageUrl,  modifier = Modifier.size(24.dp),contentDescription = "")
                                 }
                             )
                         }

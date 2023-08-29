@@ -2,7 +2,6 @@ package com.example.concurrency.presentation.convert_screen
 
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -69,25 +68,7 @@ fun ConvertScreen(
     favoriteState: FavoriteCurrencyState,
     onFavoriteEvent: (FavoriteCurrencyEvent) -> Unit,
 ) {
-    var key by rememberSaveable {
-        mutableIntStateOf(favoriteState.favoriteCurrency.size)
-    }
 
-    LaunchedEffect(key1 = true) {
-        onFavoriteEvent(FavoriteCurrencyEvent.GetFavoriteCurrencies)
-
-            onEvent(
-                ConvertEvent.GetFavoriteCurrencyRates(
-                    state.base.base,
-                    favoriteState.favoriteCurrency.map {
-                        it.code
-                    }
-                )
-            )
-
-        Log.e("POST", state.currenciesRates.toString())
-
-    }
 
     var isSheetEnabled by remember {
         mutableStateOf(false)
@@ -111,8 +92,6 @@ fun ConvertScreen(
         ConvertItem(state, onEvent)
 
     }
-
-
 
 
     Button(
@@ -171,7 +150,6 @@ fun ConvertScreen(
         )
     }
 
-
     Spacer(modifier = Modifier.height(5.dp))
 
 
@@ -229,9 +207,6 @@ fun ConvertScreen(
             )
         }
     }
-
-
-
     // Show the bottom sheet when isSheetEnabled is true
     if (isSheetEnabled) {
         state.currencies?.data?.let {
@@ -278,9 +253,6 @@ fun ConvertScreen(
     }
 
 }
-
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -371,7 +343,7 @@ fun ConvertItem(
                         )
                     },
                     leadingIcon = {
-                        AsyncImage(model = state.target.imageUrl, contentDescription = "")
+                        AsyncImage(model = state.target.imageUrl, contentDescription = "", modifier = Modifier.size(24.dp))
                     },
                     modifier = Modifier
                         .background(FiledBackground)
@@ -399,7 +371,7 @@ fun ConvertItem(
                                 expandedTo = false
                             },
                             leadingIcon = {
-                                AsyncImage(model = currency.imageUrl, contentDescription = "")
+                                AsyncImage(model = currency.imageUrl, contentDescription = "", modifier = Modifier.size(24.dp))
                             }
                         )
                     }
@@ -451,7 +423,7 @@ fun ConvertItem(
                         )
                     },
                     leadingIcon = {
-                        AsyncImage(model = state.base.imageUrl, contentDescription = "")
+                        AsyncImage(model = state.base.imageUrl, contentDescription = "", modifier = Modifier.size(24.dp))
                     },
                     modifier = Modifier
                         .background(FiledBackground)
@@ -480,7 +452,7 @@ fun ConvertItem(
                                     expandedFrom = false
                                 },
                                 leadingIcon = {
-                                    AsyncImage(model = currency.imageUrl, contentDescription = "")
+                                    AsyncImage(model = currency.imageUrl, contentDescription = "", modifier = Modifier.size(24.dp))
                                 }
                             )
                         }
@@ -512,4 +484,3 @@ fun ConvertItem(
         }
     }
 }
-

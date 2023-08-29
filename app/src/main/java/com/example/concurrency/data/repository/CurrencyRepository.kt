@@ -8,6 +8,7 @@ import com.example.concurrency.data.remote.model.Currencies
 import com.example.concurrency.data.remote.model.DataX
 import com.example.concurrency.data.remote.model.FavoriteResponse
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -68,12 +69,10 @@ class CurrencyRepository @Inject constructor(
         }
     }
 
-    suspend fun getFavoriteCurrencies(): List<DataX> {
-        return withContext(Dispatchers.IO) {
-            favDao.currencyDao().getAllCurrencies()
-        }
-    }
+    fun getFavoriteCurrencies(): Flow<List<DataX>> {
+        return favDao.currencyDao().getAllCurrencies()
 
+    }
 
 
 }

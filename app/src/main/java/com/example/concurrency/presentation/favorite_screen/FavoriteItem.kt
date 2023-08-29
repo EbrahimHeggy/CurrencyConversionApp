@@ -94,7 +94,6 @@ fun FavoriteItem(itemId: Int, context: Context, currency: DataX, onEvent: (Favor
                 } else {
                     onEvent(FavoriteCurrencyEvent.DeleteCurrency(currency))
                 }
-                onEvent(FavoriteCurrencyEvent.GetFavoriteCurrencies)
 
             }
         )
