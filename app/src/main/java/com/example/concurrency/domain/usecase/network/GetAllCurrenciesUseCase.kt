@@ -1,35 +1,41 @@
-package com.example.concurrency.domain.usecase
+package com.example.concurrency.domain.usecase.network
 
-import com.example.concurrency.data.remote.model.ConvertResponse
+import android.util.Log
+import com.example.concurrency.data.remote.model.Currencies
 import com.example.concurrency.data.repository.CurrencyRepository
 import com.example.concurrency.utils.Resource
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetConvertCurrencyUseCase @Inject constructor(
+class GetAllCurrenciesUseCase @Inject constructor(
     private val currencyRepository: CurrencyRepository
 ) {
 
-
-     operator fun invoke(base: String, target: String,amount: Double)
-            : Flow<Resource<ConvertResponse>> = flow {
+     operator fun invoke(): Flow<Resource<Currencies>> = flow {
 
         try {
+
             //loading state
             emit(Resource.Loading())
-            delay(2000L)
 
             // success state
-            val result = currencyRepository.getConversionCurrency(base, target, amount)
+            val result = currencyRepository.getAllCurrencies()
+           Log.e("success currencies", result.toString())
             emit(Resource.Success(result))
+
 
         } catch (e: Exception) {
             // error state
-            emit(Resource.Error(e.message))
+            Log.e("success currencies", e.message.toString())
+
+            emit(Resource.Error(e.message.toString()))
+
+
         }
     }
+
+
 }
 
 

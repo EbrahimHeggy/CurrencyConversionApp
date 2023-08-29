@@ -5,6 +5,8 @@ sealed interface ConvertEvent {
     data class GetConvertedCurrency(val base: String, val target: String, val amount: Double) :
         ConvertEvent
 
+    data class GetFavoriteCurrencyRates(val base: String, val codes: List<String>): ConvertEvent
+
     data class SetBaseAmount(val amount: String) : ConvertEvent
     data class SetBase(val base: Base) : ConvertEvent
     data class SetTarget(val target: Target) : ConvertEvent

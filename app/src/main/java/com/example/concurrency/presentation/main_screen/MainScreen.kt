@@ -24,9 +24,11 @@ fun MainScreen() {
     }
     val scrollableState = rememberScrollState()
 
-    Column(modifier = Modifier
-        .verticalScroll(scrollableState)
-        .fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .verticalScroll(scrollableState)
+            .fillMaxSize()
+    ) {
         HeaderScreen(
             onConvertPressed = { isConvert = true },
             onComparePressed = { isConvert = false },
@@ -48,12 +50,18 @@ fun HandleScreens(
 
     val convertViewModel: ConvertViewModel = hiltViewModel()
     val convertState by convertViewModel.currencyState.collectAsState()
+    val favoriteState by convertViewModel.favoriteCurrency.collectAsState()
 
     val compareViewModel: CompareViewModel = hiltViewModel()
     val compareState by compareViewModel.compareState.collectAsState()
 
     if (isConvert) {
-        ConvertScreen(convertState, convertViewModel::onEvent)
+        ConvertScreen(
+            convertState,
+            convertViewModel::onEvent,
+            favoriteState,
+            convertViewModel::onDatabaseEvent
+        )
     } else {
         CompareScreen(compareState, compareViewModel::onEvent)
     }

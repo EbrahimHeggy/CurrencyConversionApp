@@ -1,6 +1,7 @@
 package com.example.concurrency.presentation.convert_screen
 
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,9 +33,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +53,9 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.concurrency.presentation.favorite_screen.FavoriteBottomSheet
 import com.example.concurrency.R
+import com.example.concurrency.presentation.favorite_screen.FavoriteCurrencyEvent
+import com.example.concurrency.presentation.favorite_screen.FavoriteCurrencyState
+import com.example.concurrency.presentation.favorite_screen.FavoriteList
 import com.example.concurrency.ui.theme.ButtonColor
 import com.example.concurrency.ui.theme.FiledBackground
 
@@ -55,9 +63,29 @@ import com.example.concurrency.ui.theme.FiledBackground
 @Composable
 fun ConvertScreen(
     state: CurrencyState,
-    onEvent: (ConvertEvent) -> Unit
+    onEvent: (ConvertEvent) -> Unit,
+    favoriteState: FavoriteCurrencyState,
+    onFavoriteEvent: (FavoriteCurrencyEvent) -> Unit,
 ) {
+    var key by rememberSaveable {
+        mutableIntStateOf(favoriteState.favoriteCurrency.size)
+    }
 
+    LaunchedEffect(key1 = key) {
+        onFavoriteEvent(FavoriteCurrencyEvent.GetFavoriteCurrencies)
+
+            onEvent(
+                ConvertEvent.GetFavoriteCurrencyRates(
+                    state.base.base,
+                    favoriteState.favoriteCurrency.map {
+                        it.code
+                    }
+                )
+            )
+
+        Log.e("POST", state.currenciesRates.toString())
+
+    }
 
     var isSheetEnabled by remember {
         mutableStateOf(false)
@@ -159,7 +187,8 @@ fun ConvertScreen(
             FavoriteBottomSheet(
                 onSheetDismissed = {
                     isSheetEnabled = false
-                }, currencies = it
+                }, currencies = it,
+                onFavoriteEvent
             )
         }
     }
@@ -185,44 +214,13 @@ fun ConvertScreen(
         LazyColumn(
             modifier = Modifier.height(200.dp)
         ) {
-            items(10) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Leading Icon
-                    Image(
-                        painter = painterResource(id = R.drawable.united_kingdom_1),
-                        contentDescription = null,
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    // Two Text Elements Stacked Vertically
-                    Column {
-                        Text(
-                            text = "USD",
-                            fontSize = 16.sp
-                        )
-                        Text(
-
-                            text = "CURRENCY",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight(50)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    // Third Text Element at the End of the Row
-                    Text(
-                        text = "$29,850.15",
-                        fontSize = 16.sp
-                    )
-                }
+            items(favoriteState.favoriteCurrency.size) {
+                FavoriteList(currency = favoriteState.favoriteCurrency[it],
+                    state.currenciesRates?.data?.currencies?.get(it)?.rate.toString()
+                )
+                Log.e("favorite list", favoriteState.favoriteCurrency.size.toString())
             }
+
         }
 
 

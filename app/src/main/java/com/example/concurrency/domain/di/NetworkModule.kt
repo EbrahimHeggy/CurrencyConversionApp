@@ -1,11 +1,14 @@
 package com.example.concurrency.domain.di
 
+import com.example.concurrency.data.local.FavoriteDatabase
 import com.example.concurrency.data.remote.CurrencyApi
 import com.example.concurrency.data.repository.CurrencyRepository
 import com.example.concurrency.domain.usecase.AllUseCases
-import com.example.concurrency.domain.usecase.GetAllCurrenciesUseCase
-import com.example.concurrency.domain.usecase.GetCompareCurrencyUseCase
-import com.example.concurrency.domain.usecase.GetConvertCurrencyUseCase
+import com.example.concurrency.domain.usecase.database.GetFavoriteCurrenciesUseCase
+import com.example.concurrency.domain.usecase.network.GetAllCurrenciesUseCase
+import com.example.concurrency.domain.usecase.network.GetCompareCurrencyUseCase
+import com.example.concurrency.domain.usecase.network.GetConvertCurrencyUseCase
+import com.example.concurrency.domain.usecase.network.PostFavoritesCurrencies
 import com.example.concurrency.utils.Constant.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -15,7 +18,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 
@@ -54,9 +56,10 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideCurrencyRepository(
-        api: CurrencyApi
+        api: CurrencyApi,
+        database: FavoriteDatabase
     ): CurrencyRepository {
-        return CurrencyRepository(api)
+        return CurrencyRepository(api, database)
     }
 
 
@@ -65,12 +68,16 @@ object NetworkModule {
     fun provideAllUseCases(
         getConvertCurrencyUseCase: GetConvertCurrencyUseCase,
         getCompareCurrencyUseCase: GetCompareCurrencyUseCase,
-        getAllCurrenciesUseCase: GetAllCurrenciesUseCase
+        getAllCurrenciesUseCase: GetAllCurrenciesUseCase,
+        getFavoriteCurrenciesUseCase: GetFavoriteCurrenciesUseCase,
+        postFavoritesCurrencies: PostFavoritesCurrencies
     ): AllUseCases {
         return AllUseCases(
             getConvertCurrencyUseCase = getConvertCurrencyUseCase,
             getCompareCurrencyUseCase = getCompareCurrencyUseCase,
-            getAllCurrenciesUseCase = getAllCurrenciesUseCase
+            getAllCurrenciesUseCase = getAllCurrenciesUseCase,
+            getFavoriteCurrenciesUseCase = getFavoriteCurrenciesUseCase,
+            postFavoritesCurrencies = postFavoritesCurrencies,
         )
     }
 

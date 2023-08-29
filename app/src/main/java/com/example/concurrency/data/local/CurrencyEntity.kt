@@ -1,14 +1,13 @@
-package com.example.concurrency.data.remote.model
+package com.example.concurrency.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.serialization.SerialName
 
-
-@Entity("fav_currencies")
-data class DataX(
+@Entity(tableName = "fav_currencies")
+data class CurrencyEntity(
     @PrimaryKey(autoGenerate = false)
     val code: String,
     val imageUrl: String,
     val name: String
 )
+

@@ -14,22 +14,26 @@ import com.example.concurrency.data.remote.model.DataX
 @SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoriteBottomSheet(onSheetDismissed: () -> Unit, currencies: List<DataX>) {
+fun FavoriteBottomSheet(
+    onSheetDismissed: () -> Unit,
+    currencies: List<DataX>,
+    onEvent: (FavoriteCurrencyEvent) -> Unit
+) {
     val context = LocalContext.current
     val favoriteSheetState = rememberModalBottomSheetState()
 
 
-        ModalBottomSheet(
-            sheetState = favoriteSheetState,
-            onDismissRequest = { onSheetDismissed() }
-        ) {
-            LazyColumn() {
-                items(currencies.size) {
-                    FavoriteItem(it, context = context, currencies[it])
-                }
+    ModalBottomSheet(
+        sheetState = favoriteSheetState,
+        onDismissRequest = { onSheetDismissed() }
+    ) {
+        LazyColumn() {
+            items(currencies.size) {
+                FavoriteItem(it, context = context, currencies[it], onEvent)
             }
-
         }
+
+    }
 
 
 }

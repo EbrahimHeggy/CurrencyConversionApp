@@ -2,7 +2,6 @@ package com.example.concurrency.presentation.favorite_screen
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,31 +23,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.concurrency.data.local.CurrencyEntity
-import com.example.concurrency.data.local.FavoriteDatabase
+import com.example.concurrency.data.remote.model.Currencies
+import com.example.concurrency.data.remote.model.Currency
 import com.example.concurrency.data.remote.model.DataX
-import kotlinx.coroutines.launch
 
 @Composable
-fun FavoriteItem(itemId: Int, context: Context, currency: DataX, onEvent: (FavoriteCurrencyEvent) -> Unit) {
-    var isChecked by remember { mutableStateOf(false) }
-
-    val scope = rememberCoroutineScope()
-
-    // Use a unique key for each item
-    val itemKey = "item_$itemId"
-
-    // Retrieve the checked state from SharedPreferences with a unique file name
-    val sharedPreferences: SharedPreferences = remember {
-        context.getSharedPreferences("MyPrefs_", Context.MODE_PRIVATE)
-    }
-    isChecked = sharedPreferences.getBoolean(itemKey, false)
-
+fun FavoriteList(currency: DataX, rate: String) {
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -82,22 +67,7 @@ fun FavoriteItem(itemId: Int, context: Context, currency: DataX, onEvent: (Favor
             }
         }
 
-        Checkbox(
-            checked = isChecked,
-            onCheckedChange = { newCheckedState ->
-                isChecked = newCheckedState
-                // Save the state in SharedPreferences
-                sharedPreferences.edit().putBoolean(itemKey, newCheckedState).apply()
+        Text(text = rate, fontSize = 16.sp, color = Color.Black)
 
-                if (newCheckedState) {
-                    onEvent(FavoriteCurrencyEvent.InsertCurrency(currency))
-                } else {
-                    onEvent(FavoriteCurrencyEvent.DeleteCurrency(currency))
-                }
-                onEvent(FavoriteCurrencyEvent.GetFavoriteCurrencies)
-
-            }
-        )
     }
 }
-
