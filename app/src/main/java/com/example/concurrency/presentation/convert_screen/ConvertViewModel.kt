@@ -11,7 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -98,9 +97,12 @@ class ConvertViewModel @Inject constructor(
         }
     }
 
-    private fun getCurrenciesRate(base: String, codes: List<String>) {
+    private fun getCurrenciesRate(base: String, codes: List<DataX>) {
         viewModelScope.launch {
-            useCases.postFavoritesCurrencies(base, codes).collect { result ->
+
+            val codeList = codes.map { it.code }
+
+            useCases.postFavoritesCurrencies(base, codeList).collect { result ->
 
                 when(result) {
                     is Resource.Error -> {
@@ -120,7 +122,12 @@ class ConvertViewModel @Inject constructor(
                         _currencyState.update {
                             it.copy(
                                 currenciesRates = result.data,
-                                isLoading = false
+                                isLoading = false,
+                            )
+                        }
+                        _currencyState.update {
+                            it.copy(
+                                favoriteCurrency = codes
                             )
                         }
                         Log.e("result Currency", result.data?.data.toString())
@@ -181,14 +188,7 @@ class ConvertViewModel @Inject constructor(
     private fun getFavoriteCurrency() {
         viewModelScope.launch {
             useCases.getFavoriteCurrenciesUseCase().collectLatest { result ->
-                _currencyState.update {
-                    it.copy(favoriteCurrency = result)
-                }
-
-                val codes = result.map {
-                    it.code
-                }
-                getCurrenciesRate(_currencyState.value.base.base, codes)
+                getCurrenciesRate(_currencyState.value.base.base, result)
             }
         }
 

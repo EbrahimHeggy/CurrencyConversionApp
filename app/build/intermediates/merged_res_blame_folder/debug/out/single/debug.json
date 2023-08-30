@@ -1,94 +1,98 @@
 [
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/drawable_egypt_flag.png.flat",
-        "source": "com.example.concurrency.app-main-63:/drawable/egypt_flag.png"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\drawable_currency_background.png.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\drawable\\currency_background.png"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/xml_data_extraction_rules.xml.flat",
-        "source": "com.example.concurrency.app-main-63:/xml/data_extraction_rules.xml"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\mipmap-xxhdpi\\ic_launcher_round.webp"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/mipmap-xhdpi_ic_launcher.webp.flat",
-        "source": "com.example.concurrency.app-main-63:/mipmap-xhdpi/ic_launcher.webp"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\mipmap-hdpi\\ic_launcher.webp"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/drawable_ic_launcher_background.xml.flat",
-        "source": "com.example.concurrency.app-main-63:/drawable/ic_launcher_background.xml"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\drawable-v24_ic_launcher_foreground.xml.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\drawable-v24\\ic_launcher_foreground.xml"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/xml_backup_rules.xml.flat",
-        "source": "com.example.concurrency.app-main-63:/xml/backup_rules.xml"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\drawable_ic_launcher_background.xml.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\drawable\\ic_launcher_background.xml"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/drawable-v24_ic_launcher_foreground.xml.flat",
-        "source": "com.example.concurrency.app-main-63:/drawable-v24/ic_launcher_foreground.xml"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\mipmap-mdpi\\ic_launcher_round.webp"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/mipmap-mdpi_ic_launcher.webp.flat",
-        "source": "com.example.concurrency.app-main-63:/mipmap-mdpi/ic_launcher.webp"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\mipmap-anydpi-v26\\ic_launcher.xml"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/mipmap-hdpi_ic_launcher.webp.flat",
-        "source": "com.example.concurrency.app-main-63:/mipmap-hdpi/ic_launcher.webp"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\mipmap-xxhdpi\\ic_launcher.webp"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.concurrency.app-main-63:/mipmap-xxhdpi/ic_launcher_round.webp"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\mipmap-xhdpi\\ic_launcher_round.webp"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/drawable_logo.png.flat",
-        "source": "com.example.concurrency.app-main-63:/drawable/logo.png"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\drawable_frame.xml.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\drawable\\frame.xml"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/mipmap-xxhdpi_ic_launcher.webp.flat",
-        "source": "com.example.concurrency.app-main-63:/mipmap-xxhdpi/ic_launcher.webp"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\mipmap-xxxhdpi\\ic_launcher_round.webp"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.concurrency.app-main-63:/mipmap-xxxhdpi/ic_launcher_round.webp"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\mipmap-hdpi\\ic_launcher_round.webp"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.example.concurrency.app-main-63:/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\mipmap-anydpi-v26\\ic_launcher_round.xml"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/drawable_currency_background.png.flat",
-        "source": "com.example.concurrency.app-main-63:/drawable/currency_background.png"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\drawable_checked.xml.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\drawable\\checked.xml"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/drawable_frame.xml.flat",
-        "source": "com.example.concurrency.app-main-63:/drawable/frame.xml"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\drawable_logo.png.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\drawable\\logo.png"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/mipmap-xhdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.concurrency.app-main-63:/mipmap-xhdpi/ic_launcher_round.webp"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\drawable_non_checked_6.xml.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\drawable\\non_checked_6.xml"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/mipmap-mdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.concurrency.app-main-63:/mipmap-mdpi/ic_launcher_round.webp"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\mipmap-mdpi\\ic_launcher.webp"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "com.example.concurrency.app-main-63:/mipmap-anydpi-v26/ic_launcher_round.xml"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\mipmap-xxxhdpi\\ic_launcher.webp"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/mipmap-hdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.concurrency.app-main-63:/mipmap-hdpi/ic_launcher_round.webp"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\mipmap-xhdpi\\ic_launcher.webp"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/drawable_checked.xml.flat",
-        "source": "com.example.concurrency.app-main-63:/drawable/checked.xml"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\drawable_egypt_flag.png.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\drawable\\egypt_flag.png"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/drawable_united_kingdom_1.xml.flat",
-        "source": "com.example.concurrency.app-main-63:/drawable/united_kingdom_1.xml"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\xml_backup_rules.xml.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\xml\\backup_rules.xml"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/drawable_non_checked_6.xml.flat",
-        "source": "com.example.concurrency.app-main-63:/drawable/non_checked_6.xml"
+        "merged": "com.example.concurrency.app-merged_res-61:/drawable_currency.png.flat",
+        "source": "com.example.concurrency.app-main-63:/drawable/currency.png"
     },
     {
-        "merged": "com.example.concurrency.app-merged_res-61:/mipmap-xxxhdpi_ic_launcher.webp.flat",
-        "source": "com.example.concurrency.app-main-63:/mipmap-xxxhdpi/ic_launcher.webp"
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\drawable_united_kingdom_1.xml.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\drawable\\united_kingdom_1.xml"
+    },
+    {
+        "merged": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-merged_res-61:\\xml_data_extraction_rules.xml.flat",
+        "source": "C:\\Users\\jesus\\.gradle\\daemon\\8.0\\com.example.concurrency.app-main-63:\\xml\\data_extraction_rules.xml"
     }
 ]

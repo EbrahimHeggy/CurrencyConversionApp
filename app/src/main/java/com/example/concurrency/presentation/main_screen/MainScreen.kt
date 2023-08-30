@@ -1,13 +1,22 @@
 package com.example.concurrency.presentation.main_screen
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.concurrency.presentation.common.HeaderScreen
 import com.example.concurrency.presentation.compare_screen.CompareScreen
@@ -54,14 +63,27 @@ fun HandleScreens(
     val compareViewModel: CompareViewModel = hiltViewModel()
     val compareState by compareViewModel.compareState.collectAsState()
 
-    if (isConvert) {
-        ConvertScreen(
-            convertState,
-            convertViewModel::onEvent,
-        )
+    if (convertState.error.isNotEmpty()){
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+
+            Text(text = "No Internet Connection...", fontSize = 16.sp, color = Color.Red)
+        }
     } else {
-        CompareScreen(compareState, compareViewModel::onEvent)
+        if (isConvert) {
+            ConvertScreen(
+                convertState,
+                convertViewModel::onEvent,
+            )
+        } else {
+            CompareScreen(compareState, compareViewModel::onEvent)
+        }
     }
+
+
 }
 
 

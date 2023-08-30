@@ -83,6 +83,7 @@ int dimen notification_top_pad 0x7f050014
 int dimen notification_top_pad_large_text 0x7f050015
 int drawable abc_vector_test 0x7f060001
 int drawable checked 0x7f060002
+int drawable currency 0x7f06001d
 int drawable currency_background 0x7f060003
 int drawable egypt_flag 0x7f060004
 int drawable frame 0x7f060005

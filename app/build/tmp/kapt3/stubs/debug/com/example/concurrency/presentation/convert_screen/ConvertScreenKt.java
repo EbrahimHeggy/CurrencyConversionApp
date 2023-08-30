@@ -12,7 +12,7 @@ public final class ConvertScreenKt {
     }
     
     @androidx.compose.runtime.Composable
-    @kotlin.OptIn(markerClass = {androidx.compose.material3.ExperimentalMaterial3Api.class})
+    @kotlin.OptIn(markerClass = {androidx.compose.material3.ExperimentalMaterial3Api.class, androidx.compose.ui.ExperimentalComposeUiApi.class})
     public static final void ConvertItem(@org.jetbrains.annotations.NotNull
     com.example.concurrency.presentation.convert_screen.CurrencyState state, @org.jetbrains.annotations.NotNull
     kotlin.jvm.functions.Function1<? super com.example.concurrency.presentation.convert_screen.ConvertEvent, kotlin.Unit> onEvent) {
